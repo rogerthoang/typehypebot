@@ -254,6 +254,7 @@ export class Bot {
     getFastestGeneratedCaptchaResponseToken(url: string, siteKey: string): Promise<string> {
         let alreadyResolved: boolean = false;
         let resolve = null;
+
         for(const captchaSolverService of this.captchaSolverServices) {
             captchaSolverService.getResponseToken(url, siteKey).then((responseToken: string) => {
                 if(!alreadyResolved) {
@@ -262,6 +263,7 @@ export class Bot {
                 }
             });
         }
+
         return new Promise(actualResolve => {
             resolve = actualResolve;
         });
