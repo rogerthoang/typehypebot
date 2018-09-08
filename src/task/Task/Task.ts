@@ -25,16 +25,10 @@ export abstract class Task extends BaseTask {
         );
     }
 
-    public cartProxies: IProxy[];
-    public sizes: ISizes;
-    public product: IProduct;
     public searchItem: SearchItem = null;
 
-    constructor(bot: Bot, store: IStore, storeDomain: string, monitoring: IMonitoring, proxy: IProxy, interval: number, startTime: number, extra: any, orders: Order[], product: IProduct, early: IEarly, sizes: ISizes, cartProxies: IProxy[], startInit: boolean = true) {
+    constructor(bot: Bot, store: IStore, storeDomain: string, monitoring: IMonitoring, proxy: IProxy, interval: number, startTime: number, extra: any, orders: Order[], public product: IProduct, early: IEarly, public sizes: ISizes, public cartProxies: IProxy[], startInit = true) {
         super(bot, store, storeDomain, monitoring, proxy, interval, startTime, extra, orders, false);
-        this.cartProxies = cartProxies;
-        this.sizes = sizes;
-        this.product = product;
         if(early && early.url) { // early URL is set which means we can set the search item early
             const searchItem = new store.searchItemClassReference(
                 early.url,
