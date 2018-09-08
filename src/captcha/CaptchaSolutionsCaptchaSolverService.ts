@@ -1,5 +1,5 @@
 import { ICaptchaSolverService } from './ICaptchaSolverService';
-import { makeRequest } from '../util/Utils';
+import { makeRequest } from '@util/request';
 
 export class CaptchaSolutionsCaptchaSolverService implements ICaptchaSolverService {
     private secretToken: string;

@@ -1,5 +1,6 @@
-import { IProxy, IRequestOptions, IResponse, makeRequest } from '../../../util/Utils';
 import { BaseTask } from '../BaseTask';
+import { IProxy } from '@util/proxy';
+import { IRequestOptions, makeRequest } from '@util/request';
 
 export interface IStepResults {
     [x: string]: any;

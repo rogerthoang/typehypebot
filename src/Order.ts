@@ -1,9 +1,9 @@
 import {
     IOrderData, IShippingAddress, IBillingAddress, IPriceRange, IPayment,
 } from './config/IOrdersConfig';
-import { generateRandomString } from './util/Utils';
 import * as faker from 'faker';
 import { Task } from './task/Task/Task';
+import { generateRandomString } from '@util/generic';
 
 let orderId: number = 0;
 

@@ -1,10 +1,10 @@
 import { Order } from '../../../Order';
-import { IRequestOptions } from '../../../util/Utils';
 import { Session } from '../../../session/Session';
 import { IGetSizeStepResults } from './GetSizeStep';
 import { RequestStep } from '../../BaseTask/step/RequestStep';
 import { ISizeItem } from './ProductPageRequestStep';
 import { Task } from '../Task';
+import { IRequestOptions } from '@util/request';
 
 export interface ICartRequestStepResults extends IGetSizeStepResults {
     cartSession: Session;

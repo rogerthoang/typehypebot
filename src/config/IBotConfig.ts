@@ -5,7 +5,6 @@ export interface IBotOptions {
     remoteServerPort: number;
     proxyFormat: string;
     developer: {
-        developerMode: boolean;
         skipPayPalLogin: boolean;
     };
 }

@@ -1,7 +1,7 @@
-import { IRequestOptions, IResponse } from '../../../util/Utils';
 import { IGetSearchItemStepResults } from './GetSearchItemStep';
 import { RequestStep } from '../../BaseTask/step/RequestStep';
 import { Task } from '../Task';
+import { IRequestOptions, IResponse } from '@util/request';
 
 export interface ISizeItem {
     available: boolean;

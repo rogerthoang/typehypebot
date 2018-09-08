@@ -1,11 +1,12 @@
 import { BaseTask } from '../BaseTask/BaseTask';
 import { Order } from '../../Order';
-import { getProxiesArray, getProxyDetails, getTimeFromString, IProxy } from '../../util/Utils';
 import { Bot, IStore } from '../../Bot';
 import { IEarly, IMonitoring, IPreCheckoutTaskData, IProduct, ISizes } from '../../config/ITasksConfig';
 import { Session } from '../../session/Session';
 import { Task } from '../Task/Task';
 import { Step } from '../BaseTask/step/Step';
+import { getProxiesArray, getProxyDetails, IProxy } from '@util/proxy';
+import { getTimeFromString } from '@util/generic';
 
 export interface ITaskPreCheckout {
     proxies: IProxy[];

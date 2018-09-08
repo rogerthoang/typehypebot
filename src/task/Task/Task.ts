@@ -1,9 +1,10 @@
 import { BaseTask } from '../BaseTask/BaseTask';
 import { Order } from '../../Order';
-import { getProxiesArray, getProxyDetails, getTimeFromString, IProxy } from '../../util/Utils';
 import { Bot, IStore } from '../../Bot';
 import { IEarly, IMonitoring, IProduct, ITaskData, ISizes } from '../../config/ITasksConfig';
 import { SearchItem } from '../BaseTask/step/SearchItem';
+import { getProxiesArray, getProxyDetails, IProxy } from '@util/proxy';
+import { getTimeFromString } from '@util/generic';
 
 export abstract class Task extends BaseTask {
     static createTask(bot: Bot, store: IStore, taskData: ITaskData, orders: Order[]): BaseTask {

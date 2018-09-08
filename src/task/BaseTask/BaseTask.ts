@@ -1,10 +1,11 @@
 import { SearchItem } from './step/SearchItem';
 import { IBaseTaskData } from '../../config/ITasksConfig';
-import { IProxy, getMilliseconds, log, getProxyDetails, getTimeFromString } from '../../util/Utils';
 import { Order } from '../../Order';
 import { Bot, IStore } from '../../Bot';
 import { Step } from './step/Step';
 import { PaymentStep } from './step/payment/PaymentStep';
+import { getProxyDetails, IProxy } from '@util/proxy';
+import { getTimeFromString } from '@util/generic';
 
 let taskId: number = 0;
 

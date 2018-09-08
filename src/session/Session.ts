@@ -1,7 +1,8 @@
 import { Bot } from '../Bot';
 import * as puppeteer from 'puppeteer';
-import { IProxy, IRequestOptions, IResponse, makeRequest } from '../util/Utils';
 import * as request from 'request-promise-native';
+import { IProxy } from '@util/proxy';
+import { IRequestOptions, makeRequest } from '@util/request';
 
 let sessionId: number = 0;
 
