@@ -10,7 +10,7 @@ import { AntiCaptchaCaptchaSolverService } from './captcha/AntiCaptchaCaptchaSol
 import { CaptchaSolutionsCaptchaSolverService } from './captcha/CaptchaSolutionsCaptchaSolverService';
 import { TwoCaptchaCaptchaSolverService } from './captcha/2CaptchaCaptchaSolverService';
 import { ITokens, ITokensConfig } from './config/ITokensConfig';
-import { DigitalOcean } from './util/DigitalOcean';
+import { DigitalOcean } from '@util/DigitalOcean';
 import { ICaptchaSolverService } from './captcha/ICaptchaSolverService';
 import { INotifier, NotifierName, NotifierType } from './notify/INotifier';
 import { NexmoNotifier } from './notify/sms/NexmoNotifier';
@@ -88,16 +88,14 @@ export class Bot {
             console.log('Registered tasks\n');
 
             console.log('Loading bot.json...');
-            const botConfig: IBotConfig = loadConfig(`${__dirname}/..config/bot.json`);
+            const botConfig = <IBotConfig> loadConfig(`${__dirname}/..config/bot.json`);
             const botData = botConfig.body;
             this.options = botData;
-            this.isUsingDeveloperMode = botData.developer.developerMode;
             console.log('Loaded bot.json\n');
 
             console.log('Loading tokens.json...');
-            const tokensConfig: ITokensConfig = loadConfig(`${__dirname}/../config/tokens.json`);
-            const tokens = tokensConfig.body;
-            this.tokens = tokens;
+            const tokensConfig = <ITokensConfig> loadConfig(`${__dirname}/../config/tokens.json`);
+            this.tokens = tokensConfig.body;
             console.log('Loaded tokens.json\n');
 
             this.digitalOcean = null;
@@ -122,7 +120,7 @@ export class Bot {
             console.log('Finished creating captcha solver services\n');
 
             console.log('Loading notifier-options.json...');
-            const notifierOptionsConfig: INotifierOptionsConfig = loadConfig(`${__dirname}/../config/notifier-options.json`);
+            const notifierOptionsConfig = <INotifierOptionsConfig> loadConfig(`${__dirname}/../config/notifier-options.json`);
             const notifierOptions = notifierOptionsConfig.body;
             console.log('Loaded notifier-options.json\n');
 
@@ -150,12 +148,12 @@ export class Bot {
             }
             console.log('Finished creating notifiers\n');
 
-            console.log('Starting remote server...');
-            this.remoteServer = new RemoteServer(botData.remoteServerPort);
-            console.log('Started remote server\n');
+            // console.log('Starting remote server...');
+            // this.remoteServer = new RemoteServer(botData.remoteServerPort);
+            // console.log('Started remote server\n');
 
             console.log('Loading orders.json...');
-            const ordersConfig: IOrdersConfig = loadConfig(`${__dirname}/../config/orders.json`);
+            const ordersConfig = <IOrdersConfig> loadConfig(`${__dirname}/../config/orders.json`);
             const ordersData = ordersConfig.body;
             console.log('Loaded orders.json\n');
 
@@ -165,6 +163,7 @@ export class Bot {
             console.log('Creating orders...');
             for(let i = 0; i < ordersData.length; i++) {
                 const orderData = ordersData[i];
+
                 if(orderData.active) {
                     if(orderData.payment.method === PaymentMethod.PayPal) {
                         const paymentData = <IPayPalPaymentData> orderData.payment.data;
@@ -175,6 +174,7 @@ export class Bot {
                         passwordsByPayPalEmail[paymentData.authentication.data.email] = paymentData.authentication.data.password;
                     }
                 }
+
                 ordersById[i] = Order.createOrder(orderData);
             }
             this.ordersById = ordersById;
@@ -228,7 +228,7 @@ export class Bot {
             }
 
             console.log('Loading tasks.json...');
-            const tasksConfig: ITasksConfig = loadConfig(`${__dirname}/../config/tasks.json`);
+            const tasksConfig = <ITasksConfig> loadConfig(`${__dirname}/../config/tasks.json`);
             const tasksData = tasksConfig.body;
             console.log('Loaded tasks.json\n');
 
@@ -236,15 +236,18 @@ export class Bot {
             for(let i = 0; i < tasksData.length; i++) {
                 const taskData: any = tasksData[i];
                 const orders: Order[] = [];
+
                 for(let x = 0; x < taskData.orders.length; x++) {
                     const orderId: number = taskData.orders[x];
                     orders.push(ordersById[orderId]);
                 }
+
                 const store = stores[taskData.storeName];
+
                 this.tasks.push(new taskConstructionData[taskData.storeName].taskClass(this, store, taskData, orders));
             }
         }catch(error) {
-            console.log('Could not load config file(s): ', error);
+            console.log('Could not load config file(s)', error);
         }
     }
 
@@ -266,6 +269,7 @@ export class Bot {
 
     async notify(message: any, identifiers?: {type?: NotifierType, name?: NotifierName}): Promise<void> {
         const notifiers: INotifier[] = [];
+
         if(identifiers === undefined) {
             notifiers.push(...this.notifiers);
         }else {
@@ -275,14 +279,17 @@ export class Bot {
                         continue;
                     }
                 }
+
                 if(identifiers.name) {
                     if(notifier.name !== identifiers.name) {
                         continue;
                     }
                 }
+
                 notifiers.push(notifier);
             }
         }
+
         const promises: Promise<void>[] = [];
         for(const notifier of notifiers) {
             promises.push(notifier.notify(message));

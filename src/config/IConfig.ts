@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 
-export function loadConfig(path: string): IConfig {
-    return {
+export function loadConfig<ConfigType extends IConfig>(path: string): ConfigType {
+    return <ConfigType> {
         body: JSON.parse(readFileSync(path, 'utf8')),
     };
 }
