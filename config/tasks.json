@@ -1,0 +1,48 @@
+[
+    {
+        "active": false,
+        "monitoring": true,
+        "storeName": "",
+        "storeDomain": "",
+        "proxy": null,
+        "interval": 5000,
+        "startTime": "2000-01-01 00:00:00.000",
+        "startDelay": 0,
+        "carts": {
+            "maximumEmptyCarts": 0,
+            "proxies": [],
+            "delayWithoutProxies": 0
+        },
+        "sizes": {
+            "fallback": {
+                "sizes": [],
+                "any": false
+            },
+            "size": 44
+        },
+        "product": {
+            "search": "",
+            "filter": {
+                "title": {
+                    "contains": [],
+                    "blocked": []
+                }
+            }
+        },
+        "preCheckout": {
+            "sessionsPerOrder": 5,
+            "proxies": [],
+            "delayWithoutProxies": 0
+        },
+        "extra": {
+
+        },
+        "early": {
+            "name": null,
+            "url": null
+        },
+        "orders": [
+            0
+        ]
+    }
+]

@@ -1,0 +1,23 @@
+{
+    "sms": {
+        "Nexmo": {
+            "fromNumber": "",
+            "toNumber": "",
+            "alphanumericName": ""
+        },
+        "Twilio": {
+            "fromNumber": "",
+            "toNumber": "",
+            "alphanumericName": ""
+        }
+    },
+    "chat": {
+        "Discord": {
+            "channelName": ""
+        },
+        "Slack": {
+            "channelName": "",
+            "botName": ""
+        }
+    }
+}

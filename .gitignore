@@ -1,0 +1,11 @@
+/.secret
+/node_modules
+/package-lock.json
+/.ssh-keys
+/stores.txt
+/src_old
+/dist
+/.idea
+/extra
+/start.js
+/src/remote

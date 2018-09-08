@@ -1,0 +1,18 @@
+{
+    "localAddress": "",
+    "remoteServerPort": 8086,
+    "proxyFormat": "#address#:#port#:#username#:#password#",
+    "developer": {
+        "developerMode": true,
+        "skipPayPalLogin": true
+    },
+    "_emailOrPasswordReplacing": {
+        "_replaceWithOptions": [
+            "#randomFirstName#",
+            "#randomLastName#",
+            "#randomWord#",
+            "#randomNumber#",
+            "#randomString#"
+        ]
+    }
+}

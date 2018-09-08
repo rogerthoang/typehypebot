@@ -1,0 +1,62 @@
+[
+    {
+        "_orderId": 0,
+        "active": true,
+        "canBeUsedMultipleTimesAtSameStore": false,
+        "maxUses": 1,
+        "registration": {
+            "email": "",
+            "password": ""
+        },
+        "billing": {
+            "company": "",
+            "gender": "",
+            "firstName": "",
+            "lastName": "",
+            "telephone": "",
+            "birthDate": {
+                "day": 1,
+                "month": 1,
+                "year": 2000
+            },
+            "streetName": "",
+            "streetNumber": "",
+            "streetName2": "",
+            "streetNumber2": "",
+            "postcode": "",
+            "city": "",
+            "province": "",
+            "country": ""
+        },
+        "shipping": {
+            "company": "",
+            "telephone": "",
+            "firstName": "",
+            "lastName": "",
+            "streetName": "",
+            "streetNumber": "",
+            "streetName2": "",
+            "streetNumber2": "",
+            "postcode": "",
+            "city": "",
+            "province": "",
+            "country": ""
+        },
+        "price": {
+            "minimum": 150,
+            "maximum": 350
+        },
+        "payment": {
+            "method": "PayPal",
+            "data": {
+                "authentication": {
+                    "method": "credentials",
+                    "data": {
+                        "email": "",
+                        "password": ""
+                    }
+                }
+            }
+        }
+    }
+]
