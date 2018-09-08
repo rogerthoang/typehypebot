@@ -19,10 +19,10 @@ export interface IClient {
     isAlive: boolean;
 }
 
-let clientId: number = 0;
+let clientId = 0;
 
-const authenticateTimeout: number = 3000;
-const pingInterval: number = 60000;
+const authenticateTimeout = 3000;
+const pingInterval = 60000;
 
 export class WebSocketServer extends EventListener {
     public server: WebSocket.Server;

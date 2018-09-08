@@ -76,7 +76,7 @@ export class Order {
     public id: number;
     public registration: Registration;
 
-    private uses: number = 0;
+    private uses = 0;
     private usedAtStores: number[] = [];
 
     constructor(public canBeUsedMultipleTimesAtSameStore: boolean, public maxUses: number, email: string, password: string, public bulling: IBillingAddress, public shipping: IShippingAddress, private priceRange: IPriceRange, public payment: IPayment) {

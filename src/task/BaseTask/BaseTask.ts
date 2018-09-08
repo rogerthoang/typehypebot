@@ -7,7 +7,7 @@ import { PaymentStep } from './step/payment/PaymentStep';
 import { getProxyDetails, IProxy } from '@util/proxy';
 import { getTimeFromString } from '@util/generic';
 
-let taskId: number = 0;
+let taskId = 0;
 
 export abstract class BaseTask {
     public id: number;
@@ -22,8 +22,8 @@ export abstract class BaseTask {
     public orders: Order[];
     public searchItem: SearchItem;
 
-    private finishedInit: boolean = false;
-    private waitingToStart: boolean = true;
+    private finishedInit = false;
+    private waitingToStart = true;
 
     constructor(public bot: Bot, public store: IStore, taskData: IBaseTaskData, orders: Order[], startInit: boolean = true) {
         this.id = taskId++;
@@ -72,14 +72,14 @@ export abstract class BaseTask {
             return;
         }
 
-        this.lastReRun = getMilliseconds();
+        this.lastReRun = Date.now();
 
         const stepClassReferences = this.getStepClassReferences();
         const insertPaymentClassesAfterClassReference = this.getInsertPaymentClassesAfterClassReference();
         const paymentClassReferences = this.getPaymentClassReferences();
 
         const previousStepFunction = (currentStepClassReference: { new(...args: any[]): Step }, resultsByClassReference: any, previousStepClassReference: { new(...args: any[]): Step }): void => {
-            this.lastReRun = getMilliseconds();
+            this.lastReRun = Date.now();
 
             const realPreviousStepClassReference: { new(...args: any[]): Step } = previousStepClassReference === undefined ? (stepClassReferences[stepClassReferences.indexOf(currentStepClassReference) - 1] || stepClassReferences[0]) : previousStepClassReference;
             const previousStepClassReferenceIndex: number = stepClassReferences.indexOf(previousStepClassReference);

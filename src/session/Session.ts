@@ -5,7 +5,7 @@ import { IProxy } from '@util/proxy';
 import { IRequestOptions, IResponse, makeRequest } from '@util/request';
 import { CookieJar } from 'request';
 
-let sessionId: number = 0;
+let sessionId = 0;
 
 export class Session {
     public id: number;

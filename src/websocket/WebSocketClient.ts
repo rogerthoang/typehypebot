@@ -7,7 +7,7 @@ import { EventListener } from '../EventListener';
 import { IWebSocketMessage } from './WebSocketServer';
 
 export class WebSocketClient extends EventListener {
-    public isAuthenticated: boolean = false;
+    public isAuthenticated = false;
 
     private messageQueue: IWebSocketMessage[] = [];
     private webSocket: WebSocket;
