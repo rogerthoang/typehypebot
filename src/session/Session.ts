@@ -2,7 +2,7 @@ import { Bot } from '../Bot';
 import * as puppeteer from 'puppeteer';
 import * as request from 'request-promise-native';
 import { IProxy } from '@util/proxy';
-import { IRequestOptions, makeRequest } from '@util/request';
+import { IRequestOptions, IResponse, makeRequest } from '@util/request';
 import { CookieJar } from 'request';
 
 let sessionId: number = 0;
