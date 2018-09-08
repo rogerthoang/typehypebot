@@ -52,11 +52,11 @@ export interface IRichEmbedMessage {
 export class DiscordNotifier extends ChatNotifier {
     name = NotifierName.Discord;
 
-    private client: any;
+    private client: Discord.Client;
     private channel: any;
     private loggedIn: boolean;
 
-    constructor(token: string, channelName: string) {
+    constructor(token: string, channelId: number) {
         super();
 
         this.loggedIn = false;
@@ -65,7 +65,7 @@ export class DiscordNotifier extends ChatNotifier {
         this.client.login(token);
         this.client.on('login', () => {
             this.loggedIn = true;
-            this.channel = this.client.channels.find('name', channelName);
+            this.channel = this.client.channels.get(channelId.toString());
         });
     }
 
@@ -88,7 +88,7 @@ export class DiscordNotifier extends ChatNotifier {
                         files: [],
                     };
                     for(let i = 0; i < message.files.length; i++) { // for some reason, for in loop has wrong type annotation
-                        const localFile: ILocalFile = message.files[i];
+                        const localFile = message.files[i];
                         sendMessage.files.push({
                             attachment: localFile.filePath,
                             name: localFile.name,

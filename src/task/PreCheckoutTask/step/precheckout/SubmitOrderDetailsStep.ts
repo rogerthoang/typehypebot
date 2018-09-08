@@ -14,7 +14,7 @@ export abstract class SubmitOrderDetailsStep extends Step {
     async run() {
         try {
             this.log('Submitting order details...');
-            const result: any = await this.submitOrderDetails(this.results.cartSession, this.results.order);
+            const result = await this.submitOrderDetails(this.results.cartSession, this.results.order);
             this.log('Submitted order details');
             this.nextStep(result ? result : {});
         }catch(error) {

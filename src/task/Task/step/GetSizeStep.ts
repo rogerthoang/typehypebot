@@ -28,11 +28,14 @@ export abstract class GetSizeStep extends Step {
             this.nextStep({ chosenSizeItem: chosenSizeItem });
         }
     }
+
     protected convertSizeFromTaskToProductPageFormat(size: number|string): string {
         return typeof size === 'number' ? size.toString() : size;
     }
+
     protected findSizeItem(): ISizeItem {
         const sizeItemsBySizeInProductPageFormat: {[sizeInProductPageFormat: string]: ISizeItem} = {};
+
         for(const sizeItem of this.results.sizeItems) {
             if(this.task.isMonitoring) {
                 if(!sizeItem.available) {

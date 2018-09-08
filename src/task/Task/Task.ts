@@ -24,10 +24,12 @@ export abstract class Task extends BaseTask {
             getProxiesArray(taskData.cartProxies, bot.options.proxyFormat),
         );
     }
+
     public cartProxies: IProxy[];
     public sizes: ISizes;
     public product: IProduct;
     public searchItem: SearchItem = null;
+
     constructor(bot: Bot, store: IStore, storeDomain: string, monitoring: IMonitoring, proxy: IProxy, interval: number, startTime: number, extra: any, orders: Order[], product: IProduct, early: IEarly, sizes: ISizes, cartProxies: IProxy[], startInit: boolean = true) {
         super(bot, store, storeDomain, monitoring, proxy, interval, startTime, extra, orders, false);
         this.cartProxies = cartProxies;

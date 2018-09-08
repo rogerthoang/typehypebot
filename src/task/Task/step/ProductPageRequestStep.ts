@@ -45,7 +45,7 @@ export abstract class ProductPageRequestStep extends RequestStep {
             onRetry: statusCode => {
                 this.log(`Product page request returned status code ${statusCode}. Retrying...`);
             },
-            isUsingCheerio: true,
+            useCheerio: true,
         };
     }
 

@@ -75,9 +75,11 @@ export abstract class PreCheckoutCartRequestStep extends RequestStep {
 
     protected keepCarting(cartFunction: (session: Session, order: Order) => void): void {
         const max = this.task.preCheckout.sessionsPerOrder * this.task.orders.length;
+
         let iteration = 0;
         let proxyIndex = 0;
         let orderIndex = 0;
+
         if(this.task.preCheckout.proxies.length > 0) {
             for(let i = 0; i < max; i++) {
                 cartFunction(new Session(this.task.bot, this.task.mainUrl, this.task.preCheckout.proxies[proxyIndex]), this.task.orders[orderIndex]);

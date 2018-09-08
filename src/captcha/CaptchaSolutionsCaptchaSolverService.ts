@@ -2,13 +2,7 @@ import { ICaptchaSolverService } from './ICaptchaSolverService';
 import { makeRequest } from '@util/request';
 
 export class CaptchaSolutionsCaptchaSolverService implements ICaptchaSolverService {
-    private secretToken: string;
-    private apiToken: string;
-
-    constructor(apiToken: string, secretToken: string) {
-        this.secretToken = secretToken;
-        this.apiToken = apiToken;
-    }
+    constructor(private apiToken: string, private secretToken: string) {}
 
     async getResponseToken(url: string, siteKey: string): Promise<string> {
         try {

@@ -9,20 +9,17 @@ let sessionId = 0;
 
 export class Session {
     public id: number;
-    public bot: Bot;
     public urlHistory: {[time: number]: string};
     public _url;
-    public proxy: IProxy;
     public cookieJar: CookieJar;
     public extra: any;
 
-    constructor(bot: Bot, url: string, proxy: IProxy = null, cookieJar: CookieJar = null) {
+    constructor(public bot: Bot, url: string, public proxy: IProxy = null, cookieJar: CookieJar = null) {
         this.id = sessionId++;
         this.extra = {};
         bot.sessions.push(this);
         this.urlHistory = {};
         this.url = url;
-        this.proxy = proxy;
         this.cookieJar = cookieJar === null ? request.jar() : cookieJar;
     }
 

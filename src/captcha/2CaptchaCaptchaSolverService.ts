@@ -3,11 +3,7 @@ import { makeRequest } from '@util/request';
 import { wait } from '@util/generic';
 
 export class TwoCaptchaCaptchaSolverService implements ICaptchaSolverService {
-    private apiToken: string;
-
-    constructor(apiToken: string) {
-        this.apiToken = apiToken;
-    }
+    constructor(private apiToken: string) {}
 
     async getResponseToken(url: string, siteKey: string): Promise<string> {
         try {
@@ -41,7 +37,7 @@ export class TwoCaptchaCaptchaSolverService implements ICaptchaSolverService {
 
             await wait(10000);
 
-            let result: string = await getResponseToken();
+            let result = await getResponseToken();
             do {
                 await wait(2500);
                 result = await getResponseToken();

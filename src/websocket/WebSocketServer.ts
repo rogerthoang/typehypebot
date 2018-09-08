@@ -30,7 +30,7 @@ export class WebSocketServer extends EventListener {
     private debug: boolean;
     private authenticationKey: string;
 
-    constructor(port: number, authenticationKey: string, debug: boolean = false) {
+    constructor(port: number, authenticationKey: string, debug = false) {
         super();
 
         this.debug = debug;
@@ -38,6 +38,7 @@ export class WebSocketServer extends EventListener {
         this.server = new WebSocket.Server({ port: port });
 
         const clients: IClient[] = [];
+
         this.server.on('connection', (socket, request) => {
             const client: IClient = {
                 id: clientId++,

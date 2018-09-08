@@ -6,6 +6,7 @@ import { Step } from './step/Step';
 import { PaymentStep } from './step/payment/PaymentStep';
 import { getProxyDetails, IProxy } from '@util/proxy';
 import { getTimeFromString } from '@util/generic';
+import { log } from '@util/log';
 
 let taskId = 0;
 
@@ -19,13 +20,12 @@ export abstract class BaseTask {
     public interval: number;
     public startTime: number;
     public extra: any;
-    public orders: Order[];
     public searchItem: SearchItem;
 
     private finishedInit = false;
     private waitingToStart = true;
 
-    constructor(public bot: Bot, public store: IStore, taskData: IBaseTaskData, orders: Order[], startInit: boolean = true) {
+    constructor(public bot: Bot, public store: IStore, taskData: IBaseTaskData, public orders: Order[], startInit = true) {
         this.id = taskId++;
 
         this.isMonitoring = taskData.monitoring.isMonitoring;
@@ -35,7 +35,6 @@ export abstract class BaseTask {
         this.interval = taskData.interval;
         this.startTime = taskData.startTime ? getTimeFromString(taskData.startTime) : 0;
         this.extra = taskData.extra ? taskData.extra : {};
-        this.orders = orders;
 
         if(startInit) {
             this.startInit();
@@ -140,9 +139,9 @@ export abstract class BaseTask {
     }
 
     log(string: string, file?: string): void {
-        let realFile: string = file;
+        let realFile = file;
         if(file === undefined) {
-            realFile = this.store.name + '_' + this.id + '.txt';
+            realFile = `${this.store.name}_${this.id}.txt`;
         }
         log(`[${this.store.name}][${this.id}] ${string}`, realFile);
     }
