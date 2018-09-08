@@ -1,6 +1,6 @@
 import { BaseTask } from '../BaseTask';
 import { IProxy } from '@util/proxy';
-import { IRequestOptions, IResponse, makeRequest } from '@util/request';
+import { IRequestOptions, IResponse, makeRequest, RequestMethod } from '@util/request';
 
 export interface IStepResults {
     [x: string]: any;
@@ -35,7 +35,7 @@ export abstract class Step {
         this.task.log(string);
     }
 
-    protected async makeRequest(method: string, url: string, options: IRequestOptions = {}): Promise<IResponse> {
+    protected async makeRequest(method: RequestMethod, url: string, options: IRequestOptions = {}): Promise<IResponse> {
         try {
             if(options.proxy === undefined || options.proxy === null) {
                 options.proxy = this.proxy;

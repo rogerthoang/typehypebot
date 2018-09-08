@@ -2,7 +2,7 @@ import { Bot } from '../Bot';
 import * as puppeteer from 'puppeteer';
 import * as request from 'request-promise-native';
 import { IProxy } from '@util/proxy';
-import { IRequestOptions, IResponse, makeRequest } from '@util/request';
+import { IRequestOptions, IResponse, makeRequest, RequestMethod } from '@util/request';
 import { CookieJar } from 'request';
 
 let sessionId = 0;
@@ -23,7 +23,7 @@ export class Session {
         this.cookieJar = cookieJar === null ? request.jar() : cookieJar;
     }
 
-    async makeRequest(method: string, url: string, options: IRequestOptions = {}): Promise<IResponse> {
+    async makeRequest(method: RequestMethod, url: string, options: IRequestOptions = {}): Promise<IResponse> {
         return await makeRequest(method, url, Object.assign(options, {
             cookieJar: this.cookieJar,
             proxy: this.proxy,

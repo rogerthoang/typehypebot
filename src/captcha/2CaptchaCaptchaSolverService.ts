@@ -1,5 +1,5 @@
 import { ICaptchaSolverService } from './ICaptchaSolverService';
-import { makeRequest } from '@util/request';
+import { makeRequest, RequestMethod } from '@util/request';
 import { wait } from '@util/generic';
 
 export class TwoCaptchaCaptchaSolverService implements ICaptchaSolverService {
@@ -7,7 +7,7 @@ export class TwoCaptchaCaptchaSolverService implements ICaptchaSolverService {
 
     async getResponseToken(url: string, siteKey: string): Promise<string> {
         try {
-            const { json } = await makeRequest('GET', 'http://2captcha.com/in.php', {
+            const { json } = await makeRequest(RequestMethod.GET, 'http://2captcha.com/in.php', {
                 form: {
                     key: this.apiToken,
                     method: 'userrecaptcha',
@@ -22,7 +22,7 @@ export class TwoCaptchaCaptchaSolverService implements ICaptchaSolverService {
 
             const getResponseToken = async(): Promise<string> => {
                 try {
-                    const { body } = await makeRequest('GET', 'http://2captcha.com/res.php', {
+                    const { body } = await makeRequest(RequestMethod.GET, 'http://2captcha.com/res.php', {
                         form: {
                             key: this.apiToken,
                             action: 'get',

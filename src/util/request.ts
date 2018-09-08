@@ -35,7 +35,14 @@ export interface IRequestOptions {
     form?: any;
 }
 
-export async function makeRequest(method: string, url: string, options: IRequestOptions = null): Promise<IResponse> {
+export enum RequestMethod {
+    POST = 'POST',
+    GET = 'GET',
+    DELETE = 'DELETE',
+    PUT = 'PUT',
+}
+
+export async function makeRequest(method: RequestMethod, url: string, options: IRequestOptions = null): Promise<IResponse> {
     const headers: any = {
         Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         'Accept-Encoding': 'gzip, deflate, sdch',
