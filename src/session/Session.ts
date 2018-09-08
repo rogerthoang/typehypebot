@@ -3,6 +3,7 @@ import * as puppeteer from 'puppeteer';
 import * as request from 'request-promise-native';
 import { IProxy } from '@util/proxy';
 import { IRequestOptions, makeRequest } from '@util/request';
+import { CookieJar } from 'request';
 
 let sessionId: number = 0;
 
@@ -12,10 +13,10 @@ export class Session {
     public urlHistory: {[time: number]: string};
     public _url;
     public proxy: IProxy;
-    public cookieJar: any;
+    public cookieJar: CookieJar;
     public extra: any;
 
-    constructor(bot: Bot, url: string, proxy: IProxy = null, cookieJar: any = null) {
+    constructor(bot: Bot, url: string, proxy: IProxy = null, cookieJar: CookieJar = null) {
         this.id = sessionId++;
         this.extra = {};
         bot.sessions.push(this);
@@ -80,7 +81,6 @@ export class Session {
                 size: 0,
                 httpOnly: cookie.httpOnly === undefined ? false : cookie.httpOnly,
                 secure: cookie.secure === undefined ? false : cookie.secure,
-                session: cookie.session === undefined ? false : cookie.session,
             });
         }
         return returnCookies;
@@ -99,7 +99,6 @@ export class Session {
                 sameSite: 'no_restriction', // ?
                 httpOnly: cookie.httpOnly === undefined ? false : cookie.httpOnly,
                 secure: cookie.secure === undefined ? false : cookie.secure,
-                session: cookie.session === undefined ? false : cookie.session,
                 storeId: '0',
                 value: cookie.value,
                 id: i + 1,
