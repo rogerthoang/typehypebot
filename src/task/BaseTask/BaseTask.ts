@@ -1,12 +1,11 @@
-import { SearchItem } from './step/SearchItem';
-import { IBaseTaskData } from '../../config/ITasksConfig';
-import { Order } from '../../Order';
-import { Bot, IStore } from '../../Bot';
+import { ISearchItemData, SearchItem } from './step/SearchItem';
+import { Bot } from '../../Bot';
 import { Step } from './step/Step';
 import { PaymentStep } from './step/payment/PaymentStep';
-import { getProxyDetails, IProxy } from '@util/proxy';
-import { getTimeFromString } from '@util/generic';
+import { IProxy } from '@util/proxy';
 import { log } from '@util/log';
+import { IProductData, ITaskData } from '../../config/ITasksConfig';
+import { IAccountData } from '../../config/IAccountsConfig';
 
 let taskId = 0;
 
@@ -16,25 +15,35 @@ export abstract class BaseTask {
     public mainUrl: string;
     public isMonitoring: boolean;
     public startDelay: number;
-    public proxy: IProxy;
+    public mainProxy: IProxy;
     public interval: number;
     public startTime: number;
-    public extra: any;
-    public searchItem: SearchItem;
+    public account: IAccountData;
+    public products: IProductData[];
+    public searchItems: SearchItem[] = [];
 
     private finishedInit = false;
     private waitingToStart = true;
 
-    constructor(public bot: Bot, public store: IStore, taskData: IBaseTaskData, public orders: Order[], startInit = true) {
+    constructor(public bot: Bot, taskData: ITaskData, startInit = true) {
         this.id = taskId++;
 
-        this.isMonitoring = taskData.monitoring.isMonitoring;
-        this.startDelay = taskData.monitoring.startDelay;
-        this.proxy = taskData.proxy ? getProxyDetails(taskData.proxy, bot.options.proxyFormat) : null;
-        this.mainUrl = `http://www.${taskData.storeDomain}`;
-        this.interval = taskData.interval;
-        this.startTime = taskData.startTime ? getTimeFromString(taskData.startTime) : 0;
-        this.extra = taskData.extra ? taskData.extra : {};
+        const baseData = taskData.baseData;
+
+        this.startTime = baseData.startTime;
+        this.mainProxy = baseData.mainProxy;
+        this.account = baseData.account;
+        this.isMonitoring = baseData.monitoring.isMonitoring;
+        this.startDelay = this.isMonitoring ? baseData.monitoring.startDelay : 0;
+        this.mainUrl = `http://www.${baseData.store.domainsByRegion[baseData.storeRegion]}`;
+        this.interval = baseData.interval;
+        this.startTime = baseData.startTime;
+        this.products = baseData.products;
+
+        for(const product of baseData.products) {
+            const searchItemClassReference = this.getSearchItemClassReference();
+            this.searchItems.push(new searchItemClassReference(product.early));
+        }
 
         if(startInit) {
             this.startInit();
@@ -60,6 +69,7 @@ export abstract class BaseTask {
         }
     }
 
+    protected abstract getSearchItemClassReference(): { new(data: ISearchItemData): SearchItem };
     protected abstract init(done?: () => void): void;
     protected abstract getStepClassReferences(): { new(): Step }[];
     protected abstract getInsertPaymentClassesAfterClassReference(): { new(): PaymentStep };

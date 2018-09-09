@@ -1,4 +1,8 @@
 import { IConfig } from './IConfig';
+import { IStoreData } from './IStoresConfig';
+import { Order } from '../Order';
+import { IAccountData } from './IAccountsConfig';
+import { IProxy } from '@util/proxy';
 
 export interface ISizesData {
     fallback: {
@@ -13,7 +17,7 @@ export interface IMonitoringData {
     startDelay: number;
 }
 
-export interface IStoreData {
+export interface IStoreOptionsData {
     referenceName: string;
     region: string;
 }
@@ -36,14 +40,14 @@ export interface IProductData {
     sessionsPerProxy: number;
 }
 
-export interface ITaskData {
+export interface ITaskConfigData {
     baseData: {
         active: boolean;
         startTime: string;
         mainProxy: string;
         account: number;
         monitoring: IMonitoringData;
-        store: IStoreData;
+        storeOptions: IStoreOptionsData;
         products: IProductData[];
         interval: number;
         orders: number[];
@@ -52,6 +56,23 @@ export interface ITaskData {
     taskSpecificData: any;
 }
 
+export interface ITaskData {
+    baseData: {
+        active: boolean;
+        startTime: number;
+        mainProxy: IProxy;
+        account: IAccountData;
+        monitoring: IMonitoringData;
+        store: IStoreData;
+        storeRegion: string;
+        products: IProductData[];
+        interval: number;
+        orders: Order[];
+    };
+    extendedData: any;
+    taskSpecificData: any;
+}
+
 export interface ITasksConfig extends IConfig {
-    body: ITaskData[];
+    body: ITaskConfigData[];
 }
