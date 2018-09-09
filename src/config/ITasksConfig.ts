@@ -1,12 +1,6 @@
 import { IConfig } from './IConfig';
 
-export interface IPreCheckout {
-    proxies: string[];
-    sessionsPerOrder: number;
-    delayWithoutProxies: number;
-}
-
-export interface ISizes {
+export interface ISizesData {
     fallback: {
         sizes: number[],
         any: boolean;
@@ -14,48 +8,48 @@ export interface ISizes {
     size: number;
 }
 
-export interface IProduct {
-    search: string;
+export interface IMonitoringData {
+    isMonitoring: boolean;
+    startDelay: number;
+}
+
+export interface IStoreData {
+    referenceName: string;
+    region: string;
+}
+
+export interface IProductData {
+    search?: string;
+    early?: {
+        name: string;
+        url: string;
+        [x: string]: any;
+    };
+    sizes: ISizesData;
     filter: {
         title: {
             contains: string[];
             blocked: string[];
         },
     };
+    proxies: string[];
+    sessionsPerProxy: number;
 }
 
-export interface IEarly {
-    name: string;
-    url: string;
-    extra?: any;
-}
-
-export interface IMonitoring {
-    isMonitoring: boolean;
-    startDelay: number;
-}
-
-export interface IBaseTaskData {
-    active: boolean;
-    monitoring: IMonitoring;
-    storeName: string;
-    storeDomain: string;
-    proxy: string;
-    interval: number;
-    startTime: string;
-    orders: number[]|any;
-    extra?: any;
-}
-
-export interface ITaskData extends IBaseTaskData {
-    sizes: ISizes;
-    product: IProduct;
-    early?: IEarly;
-    cartProxies: string[];
-}
-
-export interface IPreCheckoutTaskData extends ITaskData {
-    preCheckout: IPreCheckout;
+export interface ITaskData {
+    baseData: {
+        active: boolean;
+        startTime: string;
+        mainProxy: string;
+        account: number;
+        monitoring: IMonitoringData;
+        store: IStoreData;
+        products: IProductData[];
+        interval: number;
+        orders: number[];
+    };
+    extendedData: any;
+    taskSpecificData: any;
 }
 
 export interface ITasksConfig extends IConfig {

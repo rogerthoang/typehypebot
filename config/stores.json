@@ -1,0 +1,8 @@
+{
+  "exampleReferenceName": {
+    "name": "storeName",
+    "domainsByRegion": {
+      "UK": "www.example.co.uk"
+    }
+  }
+}
