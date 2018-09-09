@@ -270,8 +270,6 @@ export class Bot {
         return new Promise(actualResolve => {
             resolve = actualResolve;
         });
-
-
     }
 
     async createIncognitoBrowserContext(): Promise<puppeteer.BrowserContext> {
