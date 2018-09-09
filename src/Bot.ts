@@ -14,7 +14,7 @@ import { DigitalOcean } from '@util/DigitalOcean';
 import { ICaptchaSolverService } from './captcha/ICaptchaSolverService';
 import { INotifier, NotifierName, NotifierType } from './notify/INotifier';
 import { NexmoNotifier } from './notify/sms/NexmoNotifier';
-import { INotifierOptionsConfig } from './config/INotifierOptionsConfig';
+import { INotifiersConfig } from './config/INotifiersConfig';
 import { TwilioNotifier } from './notify/sms/TwilioNotifier';
 import { DiscordNotifier } from './notify/chat/DiscordNotifier';
 import { SlackNotifier } from './notify/chat/SlackNotifier';

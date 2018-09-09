@@ -1,6 +1,6 @@
 import { IConfig } from './IConfig';
 
-export interface INotifierOptionsConfig extends IConfig {
+export interface INotifiersConfig extends IConfig {
     body: {
         sms: {
             Nexmo?: {
