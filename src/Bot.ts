@@ -119,27 +119,27 @@ export class Bot {
             }
             console.log('Finished creating captcha solver services\n');
 
-            console.log('Loading notifier-options.json...');
-            const notifierOptionsConfig = <INotifierOptionsConfig> loadConfig(`${__dirname}/../config/notifier-options.json`);
-            const notifierOptions = notifierOptionsConfig.body;
-            console.log('Loaded notifier-options.json\n');
+            console.log('Loading notifier.json...');
+            const notifiersConfig = <INotifiersConfig> loadConfig(`${__dirname}/../config/notifiers.json`);
+            const notifiers = notifiersConfig.body;
+            console.log('Loaded notifier.json\n');
 
             this.notifiers = [];
             console.log('Creating notifiers...');
             if(this.tokens.notifiers.sms.Nexmo) {
-                this.notifiers.push(new NexmoNotifier(this.tokens.notifiers.sms.Nexmo.key, this.tokens.notifiers.sms.Nexmo.secret, notifierOptions.sms.Nexmo.toNumber, notifierOptions.sms.Nexmo.fromNumber, notifierOptions.sms.Nexmo.alphanumericName));
+                this.notifiers.push(new NexmoNotifier(this.tokens.notifiers.sms.Nexmo.key, this.tokens.notifiers.sms.Nexmo.secret, notifiers.sms.Nexmo.toNumber, notifiers.sms.Nexmo.fromNumber, notifiers.sms.Nexmo.alphanumericName));
                 console.log('Created NexmoNotifier');
             }
             if(this.tokens.notifiers.sms.Twilio) {
-                this.notifiers.push(new TwilioNotifier(this.tokens.notifiers.sms.Twilio.sid, this.tokens.notifiers.sms.Twilio.authToken, notifierOptions.sms.Twilio.toNumber, notifierOptions.sms.Twilio.fromNumber, notifierOptions.sms.Twilio.alphanumericName));
+                this.notifiers.push(new TwilioNotifier(this.tokens.notifiers.sms.Twilio.sid, this.tokens.notifiers.sms.Twilio.authToken, notifiers.sms.Twilio.toNumber, notifiers.sms.Twilio.fromNumber, notifiers.sms.Twilio.alphanumericName));
                 console.log('Created TwilioNotifier');
             }
             if(this.tokens.notifiers.chat.Discord) {
-                this.notifiers.push(new DiscordNotifier(this.tokens.notifiers.chat.Discord.token, notifierOptions.chat.Discord.channelId));
+                this.notifiers.push(new DiscordNotifier(this.tokens.notifiers.chat.Discord.token, notifiers.chat.Discord.channelId));
                 console.log('Created DiscordNotifier');
             }
             if(this.tokens.notifiers.chat.Slack) {
-                this.notifiers.push(new SlackNotifier(this.tokens.notifiers.chat.Slack.token, notifierOptions.chat.Slack.channelName, notifierOptions.chat.Slack.botName));
+                this.notifiers.push(new SlackNotifier(this.tokens.notifiers.chat.Slack.token, notifiers.chat.Slack.channelName, notifiers.chat.Slack.botName));
                 console.log('Created SlackNotifier');
             }
             if(this.tokens.notifiers.social.Twitter) {
