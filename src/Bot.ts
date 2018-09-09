@@ -304,7 +304,7 @@ export class Bot {
             promises.push(notifier.notify(message));
         }
         await Promise.all(promises);
-    }]
+    }
 
     getPayPalBrowserContext(email: string): puppeteer.BrowserContext {
         return this.payPalBrowserContextsByEmail[email];
