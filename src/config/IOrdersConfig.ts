@@ -1,4 +1,4 @@
-import { IConfig } from './IConfig';
+    import { IConfig } from './IConfig';
 
 export enum PaymentMethod {
     PayPal = 'PayPal',

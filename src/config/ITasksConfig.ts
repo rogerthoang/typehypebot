@@ -41,8 +41,8 @@ export interface IProductData {
 }
 
 export interface ITaskConfigData {
+    active: boolean;
     baseData: {
-        active: boolean;
         startTime: string;
         mainProxy: string;
         account: number;
@@ -58,7 +58,6 @@ export interface ITaskConfigData {
 
 export interface ITaskData {
     baseData: {
-        active: boolean;
         startTime: number;
         mainProxy: IProxy;
         account: IAccountData;

@@ -2,8 +2,9 @@ import {
     IOrderData, IShippingAddress, IBillingAddress, IPriceRange, IPayment,
 } from './config/IOrdersConfig';
 import * as faker from 'faker';
-import { Task } from './task/Task/Task';
 import { generateRandomString } from '@util/generic';
+import { BaseTask } from './task/BaseTask/BaseTask';
+import { IStoreData } from './config/IStoresConfig';
 
 let orderId: number = 0;
 
@@ -77,21 +78,21 @@ export class Order {
     public registration: Registration;
 
     private uses = 0;
-    private usedAtStores: number[] = [];
+    private usedAtStores: IStoreData[] = [];
 
     constructor(public canBeUsedMultipleTimesAtSameStore: boolean, public maxUses: number, email: string, password: string, public bulling: IBillingAddress, public shipping: IShippingAddress, private priceRange: IPriceRange, public payment: IPayment) {
         this.id = orderId++;
         this.registration = new Registration(email, password);
     }
 
-    use(task: Task): boolean {
+    use(task: BaseTask): boolean {
         if(this.maxUses !== null && this.maxUses !== -1 && this.uses + 1 < this.maxUses) {
             if(!this.canBeUsedMultipleTimesAtSameStore) {
-                if(this.usedAtStores.indexOf(task.store.id) > -1) {
+                if(this.usedAtStores.indexOf(task.store) > -1) {
                     return false;
                 }
             }
-            this.usedAtStores.push(task.store.id);
+            this.usedAtStores.push(task.store);
             this.uses++;
             return true;
         }

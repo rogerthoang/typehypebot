@@ -76,7 +76,7 @@ export interface IProxy {
     password: string;
 }
 
-export function getProxyDetails(proxy: string, format: string = '#address#:#port#:#username#:#password#'): IProxy {
+export function getProxy(proxy: string, format: string = '#address#:#port#:#username#:#password#'): IProxy {
     return breakDown(proxy, format, [
         {
             resultName: 'address',
@@ -100,7 +100,7 @@ export function getProxyDetails(proxy: string, format: string = '#address#:#port
 export function getProxiesArray(proxies: string[], format: string = '#address#:#port#:#username#:#password#'): IProxy[] {
     const array: IProxy[] = [];
     for(const proxy of proxies) {
-        array.push(getProxyDetails(proxy, format));
+        array.push(getProxy(proxy, format));
     }
     return array;
 }

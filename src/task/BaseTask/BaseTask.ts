@@ -6,6 +6,7 @@ import { IProxy } from '@util/proxy';
 import { log } from '@util/log';
 import { IProductData, ITaskData } from '../../config/ITasksConfig';
 import { IAccountData } from '../../config/IAccountsConfig';
+import { IStoreData } from '../../config/IStoresConfig';
 
 let taskId = 0;
 
@@ -18,6 +19,7 @@ export abstract class BaseTask {
     public mainProxy: IProxy;
     public interval: number;
     public startTime: number;
+    public store: IStoreData;
     public account: IAccountData;
     public products: IProductData[];
     public searchItems: SearchItem[] = [];
@@ -34,6 +36,7 @@ export abstract class BaseTask {
         this.mainProxy = baseData.mainProxy;
         this.account = baseData.account;
         this.isMonitoring = baseData.monitoring.isMonitoring;
+        this.store = baseData.store;
         this.startDelay = this.isMonitoring ? baseData.monitoring.startDelay : 0;
         this.mainUrl = `http://www.${baseData.store.domainsByRegion[baseData.storeRegion]}`;
         this.interval = baseData.interval;

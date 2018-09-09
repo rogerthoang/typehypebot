@@ -5,7 +5,7 @@ import { Order } from './Order';
 import { IBotConfig, IBotOptions } from './config/IBotConfig';
 import { loadConfig } from './config/IConfig';
 import { IOrder, IOrdersConfig, IPayPalPaymentData, PaymentMethod } from './config/IOrdersConfig';
-import { ITasksConfig } from './config/ITasksConfig';
+import { ITaskData, ITasksConfig } from './config/ITasksConfig';
 import { AntiCaptchaCaptchaSolverService } from './captcha/AntiCaptchaCaptchaSolverService';
 import { CaptchaSolutionsCaptchaSolverService } from './captcha/CaptchaSolutionsCaptchaSolverService';
 import { TwoCaptchaCaptchaSolverService } from './captcha/2CaptchaCaptchaSolverService';
@@ -20,25 +20,10 @@ import { DiscordNotifier } from './notify/chat/DiscordNotifier';
 import { SlackNotifier } from './notify/chat/SlackNotifier';
 import { TwitterNotifier } from './notify/social/TwitterNotifier';
 import * as puppeteer from 'puppeteer';
-import { SearchItem } from './task/BaseTask/step/SearchItem';
-
-export interface ITaskConstructionData {
-    taskClass: { new(...args: any[]): BaseTask };
-    searchItemClass: { new(...args: any[]): SearchItem };
-}
-
-export interface IStoreData {
-    name: string;
-    countries?: string[];
-}
-
-export interface IStore extends IStoreData {
-    id: number;
-}
-
-const taskConstructionData: { [storeName: string]: ITaskConstructionData } = {};
-const stores: { [storeName: string]: IStore } = {};
-let storeId: number = 0;
+import { getTimeFromString } from '@util/generic';
+import { IStoresConfig } from './config/IStoresConfig';
+import { getProxy } from '@util/proxy';
+import { IAccountsConfig } from './config/IAccountsConfig';
 
 export class Bot {
     public browser: puppeteer.Browser;
@@ -47,10 +32,10 @@ export class Bot {
     public digitalOcean: DigitalOcean;
     public captchaSolverServices: ICaptchaSolverService[] = [];
     public notifiers: INotifier[];
-    public ordersById: {[id: number]: Order};
     public isUsingDeveloperMode: boolean;
     public sessions: Session[] = [];
 
+    private taskClassReferencesByStoreReferenceName: {[storeReferenceName: string]: { new(...args: any[]): BaseTask }} = {};
     private payPalBrowserContextsByEmail: {[email: string]: puppeteer.BrowserContext} = {};
     private tasks: BaseTask[] = [];
     private remoteServer: RemoteServer;
@@ -62,15 +47,8 @@ export class Bot {
         this.start();
     }
 
-    protected registerTask(storeData: IStoreData, taskClass: { new(...args: any[]): BaseTask }, searchItemClass: { new(...args: any[]): SearchItem }): void {
-        taskConstructionData[storeData.name] = {
-            taskClass,
-            searchItemClass,
-        };
-        stores[storeData.name] = {
-            id: storeId++,
-            ...storeData,
-        };
+    protected registerTask(storeReferenceName: string, taskClassReference: { new(...args: any[]): BaseTask }) {
+        this.taskClassReferencesByStoreReferenceName[storeReferenceName] = taskClassReference;
     }
 
     protected registerTasks(): void {}
@@ -149,36 +127,32 @@ export class Bot {
             }
             console.log('Finished creating notifiers\n');
 
-            // console.log('Starting remote server...');
-            // this.remoteServer = new RemoteServer(botData.remoteServerPort);
-            // console.log('Started remote server\n');
-
             console.log('Loading orders.json...');
             const ordersConfig = <IOrdersConfig> loadConfig(`${__dirname}/../config/orders.json`);
             const ordersData = ordersConfig.body;
             console.log('Loaded orders.json\n');
 
-            const ordersById: {[id: number]: Order} = {};
+            const orders: Order[] = [];
             const ordersDataByPayPalEmail: {[payPalEmail: string]: IOrder[]} = {};
             const passwordsByPayPalEmail: {[payPalEmail: string]: string} = {};
             console.log('Creating orders...');
-            for(let i = 0; i < ordersData.length; i++) {
-                const orderData = ordersData[i];
 
+            for(const orderData of ordersData) {
                 if(orderData.active) {
                     if(orderData.payment.method === PaymentMethod.PayPal) {
                         const paymentData = <IPayPalPaymentData> orderData.payment.data;
+
                         if(ordersDataByPayPalEmail[paymentData.authentication.data.email] === undefined) {
                             ordersDataByPayPalEmail[paymentData.authentication.data.email] = [];
                         }
+
                         ordersDataByPayPalEmail[paymentData.authentication.data.email].push(orderData);
                         passwordsByPayPalEmail[paymentData.authentication.data.email] = paymentData.authentication.data.password;
                     }
-                }
 
-                ordersById[i] = Order.createOrder(orderData);
+                    orders.push(Order.createOrder(orderData));
+                }
             }
-            this.ordersById = ordersById;
             console.log('Created orders\n');
 
             this.browser = await puppeteer.launch({ headless: this.options.developer.isHeadlessBrowser });
@@ -230,24 +204,43 @@ export class Bot {
                 console.log('Logged into PayPal account(s)\n');
             }
 
+            console.log('Loading stores.json...');
+            const storesConfig = <IStoresConfig> loadConfig(`${__dirname}/../config/stores.json`);
+            const storesByReferenceName = storesConfig.body;
+            console.log('Loaded stores.json\n');
+
+            console.log('Loading accounts.json...');
+            const accountsConfig = <IAccountsConfig> loadConfig(`${__dirname}/../config/accounts.json`);
+            const accounts = accountsConfig.body;
+            console.log('Loaded stores.json\n');
+
             console.log('Loading tasks.json...');
             const tasksConfig = <ITasksConfig> loadConfig(`${__dirname}/../config/tasks.json`);
-            const tasksData = tasksConfig.body;
+            const tasksConfigData = tasksConfig.body;
             console.log('Loaded tasks.json\n');
 
             console.log('Creating tasks...');
-            for(let i = 0; i < tasksData.length; i++) {
-                const taskData: any = tasksData[i];
-                const orders: Order[] = [];
-
-                for(let x = 0; x < taskData.orders.length; x++) {
-                    const orderId: number = taskData.orders[x];
-                    orders.push(ordersById[orderId]);
+            for(const taskConfigData of tasksConfigData) {
+                if(taskConfigData.active) {
+                    const baseData = taskConfigData.baseData;
+                    const taskData: ITaskData = {
+                        baseData: {
+                            startTime: getTimeFromString(baseData.startTime),
+                            mainProxy: getProxy(baseData.mainProxy),
+                            account: accounts[baseData.account],
+                            monitoring: baseData.monitoring,
+                            store: storesByReferenceName[baseData.storeOptions.referenceName],
+                            storeRegion: baseData.storeOptions.region,
+                            products: baseData.products,
+                            interval: baseData.interval,
+                            orders: baseData.orders.map(orderIndex => orders[orderIndex]),
+                        },
+                        extendedData: taskConfigData.extendedData,
+                        taskSpecificData: taskConfigData.taskSpecificData,
+                    };
+                    const taskClassReference = this.taskClassReferencesByStoreReferenceName[baseData.storeOptions.referenceName];
+                    this.tasks.push(new taskClassReference(this, taskData));
                 }
-
-                const store = stores[taskData.storeName];
-
-                this.tasks.push(new taskConstructionData[taskData.storeName].taskClass(this, store, taskData, orders));
             }
         }catch(error) {
             console.log('Could not load config file(s)', error);
