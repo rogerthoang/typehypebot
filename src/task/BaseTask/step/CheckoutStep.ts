@@ -1,4 +1,4 @@
-import { Step } from '../../BaseTask/step/Step';
+import { Step } from './Step';
 import { ICartRequestStepResults } from './CartRequestStep';
 
 export interface ICheckoutStepResults extends ICartRequestStepResults {

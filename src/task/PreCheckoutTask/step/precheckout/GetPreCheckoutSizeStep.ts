@@ -1,7 +1,7 @@
 import { Step } from '../../../BaseTask/step/Step';
 import { PreCheckoutTask } from '../../PreCheckoutTask';
 import { IGetRandomSearchItemStepResults } from './GetRandomSearchItemStep';
-import { IProductPageRequestStepResults, ISizeItem } from '../../../Task/step/ProductPageRequestStep';
+import { IProductPageRequestStepResults, ISizeItem } from '../../../BaseTask/step/ProductPageRequestStep';
 
 export interface IGetPreCheckoutSizeStepResults extends IGetRandomSearchItemStepResults {
     sizeItem: ISizeItem;

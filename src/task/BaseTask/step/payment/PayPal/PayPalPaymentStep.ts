@@ -1,5 +1,5 @@
 import { Step } from '../../Step';
-import { IPayPalCheckoutStepResults } from '../../../../Task/step/CheckoutStep';
+import { IPayPalCheckoutStepResults } from '../../CheckoutStep';
 
 export interface IPayPalPaymentStepResults extends IPayPalCheckoutStepResults {}
 

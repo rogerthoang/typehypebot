@@ -7,6 +7,7 @@ import { log } from '@util/log';
 import { IProductData, ITaskData } from '../../config/ITasksConfig';
 import { IAccountData } from '../../config/IAccountsConfig';
 import { IStoreData } from '../../config/IStoresConfig';
+import { Order } from '../../Order';
 
 let taskId = 0;
 
@@ -22,6 +23,7 @@ export abstract class BaseTask {
     public store: IStoreData;
     public account: IAccountData;
     public products: IProductData[];
+    public orders: Order[];
     public searchItems: SearchItem[] = [];
 
     private finishedInit = false;
@@ -40,6 +42,7 @@ export abstract class BaseTask {
         this.startDelay = this.isMonitoring ? baseData.monitoring.startDelay : 0;
         this.mainUrl = `http://www.${baseData.store.domainsByRegion[baseData.storeRegion]}`;
         this.interval = baseData.interval;
+        this.orders = baseData.orders;
         this.startTime = baseData.startTime;
         this.products = baseData.products;
 

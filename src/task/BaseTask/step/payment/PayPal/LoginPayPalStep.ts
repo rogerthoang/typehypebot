@@ -1,5 +1,5 @@
 import { IPayPalPaymentStepResults, PayPalPaymentStep } from './PayPalPaymentStep';
-import { IPayPalCheckoutStepResults } from '../../../../Task/step/CheckoutStep';
+import { IPayPalCheckoutStepResults } from '../../CheckoutStep';
 import { IPayPalPaymentData } from '../../../../../config/IOrdersConfig';
 import { Page } from 'puppeteer';
 

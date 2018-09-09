@@ -1,6 +1,6 @@
-import { Step } from '../../BaseTask/step/Step';
+import { Step } from './Step';
 import { IProductPageRequestStepResults, ISizeItem } from './ProductPageRequestStep';
-import { Task } from '../Task';
+import { Task } from '../../Task/Task';
 
 export interface IGetSizeStepResults extends IProductPageRequestStepResults {
     chosenSizeItem: ISizeItem;

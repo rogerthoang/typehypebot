@@ -1,54 +1,10 @@
 import { BaseTask } from '../BaseTask/BaseTask';
-import { Order } from '../../Order';
-import { Bot, IStore } from '../../Bot';
-import { IEarly, IMonitoring, IPreCheckoutTaskData, IProduct, ISizes } from '../../config/ITasksConfig';
 import { Session } from '../../session/Session';
-import { Task } from '../Task/Task';
 import { Step } from '../BaseTask/step/Step';
-import { getProxiesArray, getProxyDetails, IProxy } from '@util/proxy';
-import { getTimeFromString } from '@util/generic';
+import { IProxy } from '@util/proxy';
 
-export interface ITaskPreCheckout {
-    proxies: IProxy[];
-    sessionsPerOrder: number;
-    delayWithoutProxies: number;
-}
-
-export abstract class PreCheckoutTask extends Task {
-    static createTask(bot: Bot, store: IStore, taskData: IPreCheckoutTaskData, orders: Order[]): BaseTask {
-        const preCheckout: ITaskPreCheckout = {
-            proxies: getProxiesArray(taskData.preCheckout.proxies, bot.options.proxyFormat),
-            sessionsPerOrder: taskData.preCheckout.sessionsPerOrder,
-            delayWithoutProxies: taskData.preCheckout.delayWithoutProxies,
-        };
-        return new store.taskClassReference(
-            bot,
-            store,
-            taskData.storeDomain,
-            taskData.monitoring,
-            taskData.proxy ? getProxyDetails(taskData.proxy, bot.options.proxyFormat) : null,
-            taskData.interval,
-            taskData.startTime ? getTimeFromString(taskData.startTime) : 0,
-            taskData.extra ? taskData.extra : {},
-            orders,
-            taskData.product,
-            taskData.early ? taskData.early : {},
-            taskData.sizes,
-            getProxiesArray(taskData.cartProxies, bot.options.proxyFormat),
-            preCheckout,
-        );
-    }
-
-    public preCheckout: ITaskPreCheckout;
+export abstract class PreCheckoutTask extends BaseTask {
     public preCheckoutSessions: {[orderId: number]: Session[]} = {};
-
-    constructor(bot: Bot, store: IStore, storeDomain: string, monitoring: IMonitoring, proxy: IProxy, interval: number, startTime: number, extra: any, orders: Order[], product: IProduct, early: IEarly, sizes: ISizes, cartProxies: IProxy[], preCheckout: ITaskPreCheckout, startInit: boolean = true) {
-        super(bot, store, storeDomain, monitoring, proxy, interval, startTime, extra, orders, product, early, sizes, cartProxies, false);
-        this.preCheckout = preCheckout;
-        if(startInit) {
-            this.startInit();
-        }
-    }
 
     protected async doneInit(): Promise<void> {
         this.log('Getting pre-checkout sessions');
@@ -80,10 +36,10 @@ export abstract class PreCheckoutTask extends Task {
             }
             nextStepClassReference = stepClassReferences[currentStepClassReferenceIndex + 1];
             this.log(nextStepClassReference.name);
-            new nextStepClassReference(this, this.proxy, (currentStepClassReference: { new(...args: any[]): Step }, resultsByClassReference: any, previousStepClassReference: { new(...args: any[]): Step }) => {}, nextStepFunction, resultsByClassReference).run();
+            new nextStepClassReference(this, this.mainProxy, (currentStepClassReference: { new(...args: any[]): Step }, resultsByClassReference: any, previousStepClassReference: { new(...args: any[]): Step }) => {}, nextStepFunction, resultsByClassReference).run();
         };
 
-        new stepClassReferences[0](this, this.proxy, (currentStepClassReference: { new(...args: any[]): Step }, resultsByClassReference: any, previousStepClassReference: { new(...args: any[]): Step }) => {}, nextStepFunction, {}).run();
+        new stepClassReferences[0](this, this.mainProxy, (currentStepClassReference: { new(...args: any[]): Step }, resultsByClassReference: any, previousStepClassReference: { new(...args: any[]): Step }) => {}, nextStepFunction, {}).run();
         return promise;
     }
 }

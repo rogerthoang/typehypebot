@@ -4,7 +4,7 @@ import { PreCheckoutTask } from '../../PreCheckoutTask';
 import { RequestStep } from '../../../BaseTask/step/RequestStep';
 import { IGetPreCheckoutSizeStepResults } from './GetPreCheckoutSizeStep';
 import { IStepResults } from '../../../BaseTask/step/Step';
-import { ISizeItem } from '../../../Task/step/ProductPageRequestStep';
+import { ISizeItem } from '../../../BaseTask/step/ProductPageRequestStep';
 import { IRequestOptions } from '@util/request';
 
 export interface IPreCheckoutCartRequestStepResults extends IStepResults {
