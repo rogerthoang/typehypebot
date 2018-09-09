@@ -3,8 +3,8 @@
     "remoteServerPort": 8086,
     "proxyFormat": "#address#:#port#:#username#:#password#",
     "developer": {
-        "developerMode": true,
-        "skipPayPalLogin": true
+        "skipPayPalLogin": true,
+        "isHeadlessBrowser": false
     },
     "_emailOrPasswordReplacing": {
         "_replaceWithOptions": [

@@ -41,6 +41,7 @@ const stores: { [storeName: string]: IStore } = {};
 let storeId: number = 0;
 
 export class Bot {
+    public browser: puppeteer.Browser;
     public options: IBotOptions;
     public tokens: ITokens;
     public digitalOcean: DigitalOcean;
@@ -50,7 +51,7 @@ export class Bot {
     public isUsingDeveloperMode: boolean;
     public sessions: Session[] = [];
 
-    private payPalBrowsersByEmail: {[email: string]: puppeteer.Browser} = {};
+    private payPalBrowserContextsByEmail: {[email: string]: puppeteer.BrowserContext} = {};
     private tasks: BaseTask[] = [];
     private remoteServer: RemoteServer;
 
@@ -180,6 +181,7 @@ export class Bot {
             this.ordersById = ordersById;
             console.log('Created orders\n');
 
+            this.browser = await puppeteer.launch({ headless: this.options.developer.isHeadlessBrowser });
             if(!botData.developer.skipPayPalLogin) {
                 const promises: Promise<void>[] = [];
 
@@ -187,8 +189,8 @@ export class Bot {
                     console.log(`Logging in with PayPal ${email}...`);
 
                     promises.push(new Promise(async resolve => {
-                        const browser = await puppeteer.launch({ headless: false });
-                        const page = await browser.newPage();
+                        const context = await this.createIncognitoBrowserContext();
+                        const page = await context.newPage();
                         const password = passwordsByPayPalEmail[email];
 
                         await page.goto('https://www.paypal.com/signin');
@@ -208,7 +210,7 @@ export class Bot {
 
                             if(await page.$('.vx_mainContent.contents') !== null || await page.$('#summary')) {
                                 console.log(`Logged into PayPal ${email}`);
-                                this.addPayPalBrowserByEmail(email, browser);
+                                this.payPalBrowserContextsByEmail[email] = context;
                                 resolve();
                                 clearInterval(interval);
                             }
@@ -223,6 +225,7 @@ export class Bot {
                         }, 30000);
                     }));
                 }
+
                 await Promise.all(promises);
                 console.log('Logged into PayPal account(s)\n');
             }
@@ -267,6 +270,12 @@ export class Bot {
         return new Promise(actualResolve => {
             resolve = actualResolve;
         });
+
+
+    }
+
+    async createIncognitoBrowserContext(): Promise<puppeteer.BrowserContext> {
+        return await this.browser.createIncognitoBrowserContext();
     }
 
     async notify(message: any, identifiers?: {type?: NotifierType, name?: NotifierName}): Promise<void> {
@@ -297,13 +306,9 @@ export class Bot {
             promises.push(notifier.notify(message));
         }
         await Promise.all(promises);
-    }
+    }]
 
-    addPayPalBrowserByEmail(email: string, browser: puppeteer.Browser): void {
-        this.payPalBrowsersByEmail[email] = browser;
-    }
-
-    getPayPalBrowser(email: string): puppeteer.Browser {
-        return this.payPalBrowsersByEmail[email];
+    getPayPalBrowserContext(email: string): puppeteer.BrowserContext {
+        return this.payPalBrowserContextsByEmail[email];
     }
 }

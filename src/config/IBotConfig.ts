@@ -6,6 +6,7 @@ export interface IBotOptions {
     proxyFormat: string;
     developer: {
         skipPayPalLogin: boolean;
+        isHeadlessBrowser: boolean;
     };
 }
 
