@@ -299,7 +299,7 @@ export class Bot {
         await Promise.all(promises);
     }
 
-    addPayPalBrowserByEmail(email: string, browser: any): void {
+    addPayPalBrowserByEmail(email: string, browser: puppeteer.Browser): void {
         this.payPalBrowsersByEmail[email] = browser;
     }
 
