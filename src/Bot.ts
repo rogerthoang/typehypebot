@@ -135,7 +135,7 @@ export class Bot {
                 console.log('Created TwilioNotifier');
             }
             if(this.tokens.notifiers.chat.Discord) {
-                this.notifiers.push(new DiscordNotifier(this.tokens.notifiers.chat.Discord.token, notifierOptions.chat.Discord.channelName));
+                this.notifiers.push(new DiscordNotifier(this.tokens.notifiers.chat.Discord.token, notifierOptions.chat.Discord.channelId));
                 console.log('Created DiscordNotifier');
             }
             if(this.tokens.notifiers.chat.Slack) {

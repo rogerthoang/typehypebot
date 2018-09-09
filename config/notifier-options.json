@@ -13,7 +13,7 @@
     },
     "chat": {
         "Discord": {
-            "channelName": ""
+            "channelId": null
         },
         "Slack": {
             "channelName": "",

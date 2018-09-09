@@ -16,7 +16,7 @@ export interface INotifierOptionsConfig extends IConfig {
         };
         chat: {
             Discord?: {
-                channelName: string;
+                channelId: number;
             };
             Slack?: {
                 channelName: string;
