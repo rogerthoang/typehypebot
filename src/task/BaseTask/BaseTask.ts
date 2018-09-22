@@ -6,8 +6,8 @@ import { log } from '@util/log';
 import { IProductData, ITaskData } from '../../config/ITasksConfig';
 import { IAccountData } from '../../config/IAccountsConfig';
 import { IStoreData } from '../../config/IStoresConfig';
-import { Order } from '../../Order';
 import { compensateInterval } from '@util/timing';
+import { Order } from '../../Order';
 
 let taskId = 0;
 
