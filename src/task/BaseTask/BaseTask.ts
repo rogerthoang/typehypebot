@@ -8,6 +8,7 @@ import { IProductData, ITaskData } from '../../config/ITasksConfig';
 import { IAccountData } from '../../config/IAccountsConfig';
 import { IStoreData } from '../../config/IStoresConfig';
 import { Order } from '../../Order';
+import { compensateInterval } from '@util/timing';
 
 let taskId = 0;
 
@@ -61,17 +62,17 @@ export abstract class BaseTask {
     }
 
     protected startInit(): void {
-        this.init(() => {
-            this.doneInit();
-        });
+        this.init(this.doneInit);
     }
 
     protected doneInit(): void {
         this.finishedInit = true;
         this.log('Finished initialisation');
         if(this.waitingToStart) {
-            this.log('Running task');
-            this.run();
+            compensateInterval(() => {
+                this.log('Starting task');
+                this.run();
+            }, this.startTime - Date.now());
         }
     }
 
