@@ -1,9 +1,9 @@
 import * as moment from 'moment';
-import * as crypto from "crypto";
+import * as crypto from 'crypto';
 import opn = require('opn');
 
 export function getTimeFromString(time: string, format = 'YYYY-MM-DD HH-mm-ss-SSS'): number {
-    return moment(time, 'YYYY-MM-DD HH-mm-ss-SSS').valueOf();
+    return moment(time, format).valueOf();
 }
 
 export function wait(milliseconds: number): Promise<void> {
