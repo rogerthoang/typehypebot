@@ -23,6 +23,7 @@ export abstract class BaseTask {
     public startTime: number;
     public store: IStoreData;
     public account: IAccountData;
+    public order: Order;
     public products: IProductData[];
     public orders: Order[];
     public searchItems: SearchItem[] = [];

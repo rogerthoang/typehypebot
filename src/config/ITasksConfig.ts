@@ -46,11 +46,11 @@ export interface ITaskConfigData {
         startTime: string;
         mainProxy: string;
         account: number;
+        order: number;
         monitoring: IMonitoringData;
         storeOptions: IStoreOptionsData;
         products: IProductData[];
         interval: number;
-        orders: number[];
     };
     extendedData: any;
     taskSpecificData: any;
@@ -61,12 +61,12 @@ export interface ITaskData {
         startTime: number;
         mainProxy: IProxy;
         account: IAccountData;
+        order: Order;
         monitoring: IMonitoringData;
         store: IStoreData;
         storeRegion: string;
         products: IProductData[];
         interval: number;
-        orders: Order[];
     };
     extendedData: any;
     taskSpecificData: any;
