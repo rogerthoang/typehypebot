@@ -7,7 +7,7 @@ import { CookieJar } from 'request';
 
 let sessionId = 0;
 
-export class Session {
+export class RawSession {
     public id: number;
     public urlHistory: {[time: number]: string};
     public _url;

@@ -1,6 +1,6 @@
-import { Session } from './session/Session';
+import { RawSession } from './session/RawSession';
 import { RemoteServer } from './remote/RemoteServer';
-import { BaseTask } from './task/BaseTask/BaseTask';
+import { BaseTask } from './task/BaseTask';
 import { Order } from './Order';
 import { IBotConfig, IBotOptions } from './config/IBotConfig';
 import { loadConfig } from './config/IConfig';
@@ -33,7 +33,7 @@ export class Bot {
     public captchaSolverServices: ICaptchaSolverService[] = [];
     public notifiers: INotifier[];
     public isUsingDeveloperMode: boolean;
-    public sessions: Session[] = [];
+    public sessions: RawSession[] = [];
 
     private taskClassReferencesByStoreReferenceName: {[storeReferenceName: string]: { new(...args: any[]): BaseTask }} = {};
     private payPalBrowserContextsByEmail: {[email: string]: puppeteer.BrowserContext} = {};

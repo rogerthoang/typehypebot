@@ -20,9 +20,9 @@ const defaultCreationParameters: any = {
     ssh_keys: [],
 };
 
-const keyDirectory: string = __dirname + '/../../.ssh-keys/';
-const keyIdLocation: string = keyDirectory + 'digitalocean_id';
-const keyLocation: string = keyDirectory + 'id_rsa';
+const keyDirectory = `${__dirname}/../../.ssh-keys/`;
+const keyIdLocation = `${keyDirectory}digitalocean_id`;
+const keyLocation = `${keyDirectory}id_rsa`;
 
 if(!existsSync(keyDirectory)) {
     mkdirSync(keyDirectory, 600);
@@ -41,10 +41,10 @@ async function addSSHIds(client: any): Promise<void> {
                     location: keyLocation,
                     read: true,
                 });
-                const publicKey: string = out.pubKey;
+                const publicKey = out.pubKey;
                 try {
                     const response = await client.account.createSshKey({
-                        name: Date.now() + '-typehypebot',
+                        name: `${Date.now()}-typehypebot`,
                         public_key: publicKey,
                     });
                     writeFileSync(keyIdLocation, response.id);
@@ -74,11 +74,11 @@ export class DigitalOcean {
         this.client = digitalocean.client(token);
     }
 
-    async create(name: string = 'typehypebot', region = 'lon1', size = '512mb'): Promise<number> {
+    async create(name = 'typehypebot', region = 'lon1', size = '512mb'): Promise<number> {
         await init(this.client);
         let realName: string = name;
         if(realName !== 'typehypebot') {
-            realName = 'typehypebot-' + name;
+            realName = `typehypebot-${name}`;
         }
         defaultCreationParameters.name = name;
         defaultCreationParameters.region = region;
