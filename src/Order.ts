@@ -3,7 +3,7 @@ import {
 } from './config/IOrdersConfig';
 import * as faker from 'faker';
 import { generateRandomString } from '@util/generic';
-import { BaseTask } from './task/BaseTask';
+import { BaseTask } from './task/BaseTask/BaseTask';
 import { IStoreData } from './config/IStoresConfig';
 
 let orderId: number = 0;

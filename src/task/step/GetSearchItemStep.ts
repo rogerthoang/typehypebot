@@ -1,9 +1,9 @@
 import { IStepResults, Step } from './Step';
 import { SearchItem } from './SearchItem';
 import { Task } from '../../Task/Task';
-import { containsAnArrayItem, containsArrayItems } from '../../../util/generic';
-import { compensateInterval, ICompensateInterval } from '../../../util/timing';
-import { IProxy } from '../../../util/proxy';
+import { containsAnArrayItem, containsArrayItems } from '../../util/generic';
+import { compensateInterval, ICompensateInterval } from '../../util/timing';
+import { IProxy } from '../../util/proxy';
 
 export interface IGetSearchItemStepResults extends IStepResults {
     searchItem: SearchItem;

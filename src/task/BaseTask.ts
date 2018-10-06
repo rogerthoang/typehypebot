@@ -1,13 +1,15 @@
 import { ISearchItemData, SearchItem } from './step/SearchItem';
-import { Bot } from '../../Bot';
+import { Bot } from '../Bot';
 import { Step } from './step/Step';
-import { IProxy } from '@util/proxy';
-import { log } from '@util/log';
-import { IProductData, ITaskData } from '../../config/ITasksConfig';
-import { IAccountData } from '../../config/IAccountsConfig';
-import { IStoreData } from '../../config/IStoresConfig';
-import { compensateInterval } from '@util/timing';
-import { Order } from '../../Order';
+import { IProxy } from '../util/proxy';
+import { log } from '../util/log';
+import { IProductData, ITaskData } from '../config/ITasksConfig';
+import { IAccountData } from '../config/IAccountsConfig';
+import { IStoreData } from '../config/IStoresConfig';
+import { compensateInterval } from '../util/timing';
+import { Order } from '../Order';
+import { PaymentStep } from './step/payment/PaymentStep';
+import { StepConstructor } from './StepManager';
 
 let taskId = 0;
 
@@ -86,9 +88,9 @@ export abstract class BaseTask {
 
     protected abstract getSearchItemClassReference(): { new(data: ISearchItemData): SearchItem };
 
-    protected abstract getSteps(): ({ new(...args: any[]): Step } | StepBreakpoint)[];
-    protected abstract getProductSteps(): { new(...args: any[]): Step }[];
-    protected abstract getPaymentSteps(): { new(...args: any[]): Step }[];
+    protected abstract getSteps(): (StepConstructor | StepBreakpoint)[];
+    protected abstract getProductSteps(): StepConstructor[];
+    protected abstract getPaymentSteps(): StepConstructor<PaymentStep> [];
 
     protected getStepsByBreakpoint(): { [breakpoint: number]: { new(...args: any[]): Step }[] } {
         const stepsByBreakpoint: { [breakpoint: number]: { new(...args: any[]): Step }[] } = {};
@@ -119,9 +121,11 @@ export abstract class BaseTask {
 
     log(string: string, file?: string): void {
         let realFile = file;
+
         if(file === undefined) {
             realFile = `${this.store.name}_${this.id}.txt`;
         }
+
         log(`[${this.store.name}][${this.id}] ${string}`, realFile);
     }
 

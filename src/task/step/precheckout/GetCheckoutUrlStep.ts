@@ -1,7 +1,7 @@
-import { Step } from '../../../BaseTask/step/Step';
+import { Step } from '../Step';
 import { PreCheckoutTask } from '../../PreCheckoutTask';
 import { ISubmitOrderDetailsStepResults } from './SubmitOrderDetailsStep';
-import { Session } from '../../../../session/Session';
+import { RawSession } from '../../../session/RawSession';
 
 export interface IGetCheckoutUrlStepResults extends ISubmitOrderDetailsStepResults {
     checkoutUrl: string;
@@ -27,5 +27,5 @@ export abstract class GetCheckoutUrlStep extends Step {
         }
     }
 
-    protected abstract async getCheckoutUrl(session: Session): Promise<string>;
+    protected abstract async getCheckoutUrl(session: RawSession): Promise<string>;
 }

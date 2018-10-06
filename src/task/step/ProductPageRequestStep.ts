@@ -1,7 +1,6 @@
 import { IGetSearchItemStepResults } from './GetSearchItemStep';
 import { RequestStep } from './RequestStep';
-import { Task } from '../../Task/Task';
-import { IRequestOptions, IResponse } from '../../../util/request';
+import { IRequestOptions, IResponse, RequestMethod } from '../../util/request';
 
 export interface ISizeItem {
     available: boolean;
@@ -19,8 +18,6 @@ export interface IProductPageRequestResult {
 }
 
 export abstract class ProductPageRequestStep extends RequestStep {
-    protected task: Task;
-
     async run() {
         try {
             const response = await this.getProductPageResponse();
@@ -50,7 +47,7 @@ export abstract class ProductPageRequestStep extends RequestStep {
     }
 
     protected async getProductPageResponse(): Promise<IResponse> {
-        return await this.makeRequest('GET', this.results.searchItem.url, this.getRequestOptions());
+        return await this.makeRequest(RequestMethod.GET, this.results.searchItem.url, this.getRequestOptions());
     }
 
     protected abstract onProductPageRequest(response: IResponse): Promise<IProductPageRequestResult>;

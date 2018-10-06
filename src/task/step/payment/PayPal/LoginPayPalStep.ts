@@ -1,6 +1,6 @@
 import { IPayPalPaymentStepResults, PayPalPaymentStep } from './PayPalPaymentStep';
 import { IPayPalCheckoutStepResults } from '../../CheckoutStep';
-import { IPayPalPaymentData } from '../../../../../config/IOrdersConfig';
+import { IPayPalPaymentData } from '../../../../config/IOrdersConfig';
 import { Page } from 'puppeteer';
 
 export interface ILoginPayPalStepResults extends IPayPalPaymentStepResults {

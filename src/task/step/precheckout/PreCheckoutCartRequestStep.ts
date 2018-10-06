@@ -1,14 +1,14 @@
-import { Order } from '../../../../Order';
-import { Session } from '../../../../session/Session';
-import { PreCheckoutTask } from '../../PreCheckoutTask';
-import { RequestStep } from '../../../BaseTask/step/RequestStep';
+import { Order } from '../../../Order';
+import { RawSession } from '../../../session/RawSession';
+import { PreCheckoutTask } from '../../../PreCheckoutTask/PreCheckoutTask';
+import { RequestStep } from '../RequestStep';
 import { IGetPreCheckoutSizeStepResults } from './GetPreCheckoutSizeStep';
-import { IStepResults } from '../../../BaseTask/step/Step';
-import { ISizeItem } from '../../../BaseTask/step/ProductPageRequestStep';
-import { IRequestOptions } from '@util/request';
+import { IStepResults } from '../Step';
+import { ISizeItem } from '../ProductPageRequestStep';
+import { IRequestOptions } from '../../../util/request';
 
 export interface IPreCheckoutCartRequestStepResults extends IStepResults {
-    cartSession: Session;
+    cartSession: RawSession;
     order: Order;
 }
 
@@ -20,7 +20,7 @@ export abstract class PreCheckoutCartRequestStep extends RequestStep {
         const keys = Object.keys(this.task.preCheckoutSessions);
         if(keys.length > 0) {
             for(const orderId of keys) {
-                const sessions: Session[] = this.task.preCheckoutSessions[orderId];
+                const sessions: RawSession[] = this.task.preCheckoutSessions[orderId];
                 const order: Order = this.task.bot.ordersById[orderId];
 
                 for(const session of sessions) {
@@ -41,7 +41,7 @@ export abstract class PreCheckoutCartRequestStep extends RequestStep {
                 }
             }
         }else {
-            this.keepCarting(async(session: Session, order: Order): Promise<void> => {
+            this.keepCarting(async(session: RawSession, order: Order): Promise<void> => {
                 try {
                     this.log(`Carting${session.proxy ? ` with proxy ${session.proxy.address}:${session.proxy.port}` : ''}...`);
                     const result: any = await this.cart(session, this.results.sizeItem);
@@ -73,7 +73,7 @@ export abstract class PreCheckoutCartRequestStep extends RequestStep {
         };
     }
 
-    protected keepCarting(cartFunction: (session: Session, order: Order) => void): void {
+    protected keepCarting(cartFunction: (session: RawSession, order: Order) => void): void {
         const max = this.task.preCheckout.sessionsPerOrder * this.task.orders.length;
 
         let iteration = 0;
@@ -82,13 +82,13 @@ export abstract class PreCheckoutCartRequestStep extends RequestStep {
 
         if(this.task.preCheckout.proxies.length > 0) {
             for(let i = 0; i < max; i++) {
-                cartFunction(new Session(this.task.bot, this.task.mainUrl, this.task.preCheckout.proxies[proxyIndex]), this.task.orders[orderIndex]);
+                cartFunction(new RawSession(this.task.bot, this.task.mainUrl, this.task.preCheckout.proxies[proxyIndex]), this.task.orders[orderIndex]);
                 proxyIndex = proxyIndex === this.task.preCheckout.proxies.length - 1 ? 0 : proxyIndex + 1;
                 orderIndex = orderIndex === this.task.orders.length - 1 ? 0 : orderIndex + 1;
             }
         }else {
             const interval = () => {
-                cartFunction(new Session(this.task.bot, this.task.mainUrl), this.task.orders[orderIndex]);
+                cartFunction(new RawSession(this.task.bot, this.task.mainUrl), this.task.orders[orderIndex]);
                 orderIndex = orderIndex === this.task.orders.length - 1 ? 0 : orderIndex + 1;
             };
             const int = setInterval(() => {
@@ -102,5 +102,5 @@ export abstract class PreCheckoutCartRequestStep extends RequestStep {
         }
     }
 
-    protected abstract async cart(session: Session, sizeItem: ISizeItem): Promise<any>;
+    protected abstract async cart(session: RawSession, sizeItem: ISizeItem): Promise<any>;
 }

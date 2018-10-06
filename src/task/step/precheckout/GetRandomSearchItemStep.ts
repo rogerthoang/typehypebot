@@ -1,6 +1,6 @@
-import { IStepResults, Step } from '../../../BaseTask/step/Step';
-import { SearchItem } from '../../../BaseTask/step/SearchItem';
-import { PreCheckoutTask } from '../../PreCheckoutTask';
+import { IStepResults, Step } from '../Step';
+import { SearchItem } from '../SearchItem';
+import { PreCheckoutTask } from '../../../PreCheckoutTask/PreCheckoutTask';
 
 export interface IGetRandomSearchItemStepResults extends IStepResults {
     searchItem: SearchItem;

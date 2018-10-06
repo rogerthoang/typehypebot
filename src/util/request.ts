@@ -7,8 +7,6 @@ import * as StatusCode from 'http-status-codes';
 import { FullResponse } from 'request-promise-native';
 import { readFile } from '@util/file';
 
-export type MakeRequest = (method: RequestMethod, url: string, options: IRequestOptions) => Promise<IResponse>;
-
 export interface IResponse<BodyType = any> {
     statusCode: number;
     body: BodyType;
@@ -268,7 +266,7 @@ export function getHostname(url: string): string {
     }
 
     if(hostname.slice(0, 4) !== 'www.') {
-        hostname = `www.${hostname}`;
+        hostname = 'www.' + hostname;
     }
 
     const dashIndex = hostname.indexOf('/');

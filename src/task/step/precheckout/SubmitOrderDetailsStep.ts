@@ -1,8 +1,8 @@
-import { Step } from '../../../BaseTask/step/Step';
+import { Step } from '../Step';
 import { IPreCheckoutCartRequestStepResults } from './PreCheckoutCartRequestStep';
-import { Session } from '../../../../session/Session';
-import { Order } from '../../../../Order';
-import { PreCheckoutTask } from '../../PreCheckoutTask';
+import { RawSession } from '../../../session/RawSession';
+import { Order } from '../../../Order';
+import { PreCheckoutTask } from '../../../PreCheckoutTask/PreCheckoutTask';
 
 export interface ISubmitOrderDetailsStepResults extends IPreCheckoutCartRequestStepResults {
 
@@ -25,5 +25,5 @@ export abstract class SubmitOrderDetailsStep extends Step {
         }
     }
 
-    protected abstract async submitOrderDetails(session: Session, order: Order): Promise<any>;
+    protected abstract async submitOrderDetails(session: RawSession, order: Order): Promise<any>;
 }

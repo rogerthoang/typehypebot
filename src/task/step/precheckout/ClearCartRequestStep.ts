@@ -1,8 +1,8 @@
 import { PreCheckoutTask } from '../../PreCheckoutTask';
 import { IGetCheckoutUrlStepResults } from './GetCheckoutUrlStep';
-import { Session } from '../../../../session/Session';
-import { RequestStep } from '../../../BaseTask/step/RequestStep';
-import { IRequestOptions } from '@util/request';
+import { RawSession } from '../../../session/RawSession';
+import { RequestStep } from '../RequestStep';
+import { IRequestOptions } from '../../../util/request';
 
 export abstract class ClearCartRequestStep extends RequestStep {
     protected task: PreCheckoutTask;
@@ -28,5 +28,5 @@ export abstract class ClearCartRequestStep extends RequestStep {
         };
     }
 
-    protected abstract async clearCart(session: Session): Promise<any>;
+    protected abstract async clearCart(session: RawSession): Promise<any>;
 }

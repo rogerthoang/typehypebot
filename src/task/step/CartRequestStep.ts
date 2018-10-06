@@ -1,13 +1,13 @@
-import { Order } from '../../../Order';
-import { Session } from '../../../session/Session';
+import { Order } from '../../Order';
+import { RawSession } from '../../session/RawSession';
 import { IGetSizeStepResults } from './GetSizeStep';
 import { RequestStep } from './RequestStep';
 import { ISizeItem } from './ProductPageRequestStep';
 import { Task } from '../../Task/Task';
-import { IRequestOptions } from '../../../util/request';
+import { IRequestOptions } from '../../util/request';
 
 export interface ICartRequestStepResults extends IGetSizeStepResults {
-    cartSession: Session;
+    cartSession: RawSession;
     order: Order;
 }
 
@@ -44,7 +44,7 @@ export abstract class CartRequestStep extends RequestStep {
         };
     }
 
-    protected keepCarting(cart: (session: Session, order: Order) => void): void {
+    protected keepCarting(cart: (session: RawSession, order: Order) => void): void {
         let orderIteration: number = 0;
         for(const proxy of this.task.cartProxies) {
             const order = this.task.orders[orderIteration] === undefined ? null : this.task.orders[orderIteration++];
@@ -54,8 +54,8 @@ export abstract class CartRequestStep extends RequestStep {
                     continue;
                 }
             }
-            cart(new Session(this.task.bot, this.task.mainUrl, proxy), order);
+            cart(new RawSession(this.task.bot, this.task.mainUrl, proxy), order);
         }
     }
-    protected abstract async cart(session: Session, sizeItem: ISizeItem): Promise<any>;
+    protected abstract async cart(session: RawSession, sizeItem: ISizeItem): Promise<any>;
 }
