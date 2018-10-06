@@ -1,7 +1,7 @@
 import { BaseTask } from './BaseTask';
 import { Step } from './step/Step';
 
-enum StepType {
+export enum StepType {
     Single = 0,
     Parallel,
     Choice,
@@ -11,7 +11,7 @@ type AnyObject = { [x: string]: any };
 
 export type StepIndex = [number, number]; // primary step index, secondary step index
 export type StepConstructor<StepType extends Step = Step> = { new(...args: any[]): StepType };
-export type StepResult = { [x: string]: any };
+export type StepResult = AnyObject;
 
 export class StepManager {
     private parallelSessionsCount: { [stepIndex: number]: number } = {};
@@ -174,6 +174,10 @@ export class StepManager {
         new nextStep(this.task, nextStepIndex, nextStepResult).run();
 
         return true;
+    }
+
+    setParallelSessionsCount(stepIndex: StepIndex, sessionsCount: number) {
+        this.parallelSessionsCount[stepIndex[0]] = sessionsCount;
     }
 
     previousStep(currentStepIndex: StepIndex, previousStep?: StepConstructor) {}

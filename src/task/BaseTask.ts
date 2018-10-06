@@ -1,15 +1,15 @@
 import { ISearchItemData, SearchItem } from './step/SearchItem';
 import { Bot } from '../Bot';
 import { Step } from './step/Step';
-import { IProxy } from '../util/proxy';
-import { log } from '../util/log';
+import { IProxy } from '@util/proxy';
+import { log } from '@util/log';
 import { IProductData, ITaskData } from '../config/ITasksConfig';
 import { IAccountData } from '../config/IAccountsConfig';
 import { IStoreData } from '../config/IStoresConfig';
-import { compensateInterval } from '../util/timing';
+import { compensateInterval } from '@util/timing';
 import { Order } from '../Order';
 import { PaymentStep } from './step/payment/PaymentStep';
-import { StepConstructor } from './StepManager';
+import { StepConstructor, StepManager } from './StepManager';
 
 let taskId = 0;
 
@@ -32,6 +32,8 @@ export abstract class BaseTask {
     public products: IProductData[];
     public searchItems: SearchItem[] = [];
 
+    public stepManager: StepManager;
+
     public firstRun = 0;
     public lastRun = 0;
     public lastReRun = 0;
@@ -42,6 +44,8 @@ export abstract class BaseTask {
         this.id = taskId++;
 
         const baseData = taskData.baseData;
+
+        this.stepManager = new StepManager(this, []); // todo: use right steps
 
         this.startTime = baseData.startTime;
         this.mainProxy = baseData.mainProxy;
