@@ -3,8 +3,8 @@ import { RawSession } from '../../session/RawSession';
 import { IGetSizeStepResults } from './GetSizeStep';
 import { RequestStep } from './RequestStep';
 import { ISizeItem } from './ProductPageRequestStep';
-import { Task } from '../../Task/Task';
-import { IRequestOptions } from '../../util/request';
+import { IRequestOptions } from '@util/request';
+import { BaseTask } from '../BaseTask';
 
 export interface ICartRequestStepResults extends IGetSizeStepResults {
     cartSession: RawSession;
@@ -12,8 +12,6 @@ export interface ICartRequestStepResults extends IGetSizeStepResults {
 }
 
 export abstract class CartRequestStep extends RequestStep {
-    protected task: Task;
-
     async run() {
         this.keepCarting(async(session, order) => {
             try {

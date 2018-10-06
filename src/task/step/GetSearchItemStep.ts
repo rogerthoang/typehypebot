@@ -1,9 +1,9 @@
 import { IStepResults, Step } from './Step';
 import { SearchItem } from './SearchItem';
-import { Task } from '../../Task/Task';
-import { containsAnArrayItem, containsArrayItems } from '../../util/generic';
-import { compensateInterval, ICompensateInterval } from '../../util/timing';
-import { IProxy } from '../../util/proxy';
+import { containsAnArrayItem, containsArrayItems } from '@util/generic';
+import { compensateInterval, ICompensateInterval } from '@util/timing';
+import { BaseTask } from '../BaseTask';
+import { StepIndex, StepResult } from '../StepManager';
 
 export interface IGetSearchItemStepResults extends IStepResults {
     searchItem: SearchItem;
@@ -13,8 +13,8 @@ export abstract class GetSearchItemStep extends Step {
     protected task: Task;
     protected interval: ICompensateInterval;
 
-    constructor(task: Task, proxy: IProxy = null, previousStep: (...args: any[]) => void, nextStep: (...args: any[]) => void, resultsByClass: any) {
-        super(task, proxy, previousStep, nextStep, resultsByClass);
+    constructor(task: BaseTask, stepIndex: StepIndex, results: StepResult) {
+        super(task, stepIndex, results);
         this.interval = compensateInterval(() => {
             this.run();
         }, this.task.interval, false);
@@ -59,12 +59,12 @@ export abstract class GetSearchItemStep extends Step {
     }
 
     protected isValidSearchItem(searchItem: SearchItem): boolean {
-        return containsArrayItems(searchItem.title, this.task.product.filter.title.contains) && !containsAnArrayItem(searchItem.title, this.task.product.filter.title.blocked);
+        return containsArrayItems(searchItem.name, this.task.product.filter.title.contains) && !containsAnArrayItem(searchItem.name, this.task.product.filter.title.blocked);
     }
 
     protected trySearchItem(searchItem: SearchItem): boolean {
         if(this.isValidSearchItem(searchItem)) {
-            this.log(`Found search item with title ${searchItem.title} and URL ${searchItem.url}`);
+            this.log(`Found search item with name ${searchItem.name} and URL ${searchItem.url}`);
             this.task.searchItem = searchItem;
             this.interval.stop();
             this.foundSearchItem(searchItem);

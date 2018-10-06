@@ -1,6 +1,6 @@
 import { IGetSearchItemStepResults } from './GetSearchItemStep';
 import { RequestStep } from './RequestStep';
-import { IRequestOptions, IResponse, RequestMethod } from '../../util/request';
+import { IRequestOptions, IResponse, RequestMethod } from '@util/request';
 
 export interface ISizeItem {
     available: boolean;
