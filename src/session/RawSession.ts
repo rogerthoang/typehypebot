@@ -4,22 +4,16 @@ import * as request from 'request-promise-native';
 import { IProxy } from '@util/proxy';
 import { IRequestOptions, IResponse, makeRequest, RequestMethod } from '@util/request';
 import { CookieJar } from 'request';
-import { ICookie, ISession } from './ISession';
 
-let sessionId = 0;
-
-export class RawSession implements ISession {
-    public id: number;
+export class RawSession{
     public urlHistory: {[time: number]: string};
-    public cookies: ICookie[] = [];
+    public cookies: any[] = [];
     public _url;
     public cookieJar: CookieJar;
     public extra: any;
 
     constructor(public bot: Bot, url: string, public proxy: IProxy = null, cookieJar: CookieJar = null) {
-        this.id = sessionId++;
         this.extra = {};
-        bot.sessions.push(this);
         this.urlHistory = {};
         this.url = url;
         this.cookieJar = cookieJar === null ? request.jar() : cookieJar;

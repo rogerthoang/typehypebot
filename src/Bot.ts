@@ -1,6 +1,5 @@
 import { RawSession } from './session/RawSession';
 import { RemoteServer } from './remote/RemoteServer';
-import { BaseTask } from './task/BaseTask/BaseTask';
 import { Order } from './Order';
 import { IBotConfig, IBotOptions } from './config/IBotConfig';
 import { loadConfig } from './config/IConfig';
@@ -24,6 +23,8 @@ import { getTimeFromString } from '@util/generic';
 import { IStoresConfig } from './config/IStoresConfig';
 import { getProxy } from '@util/proxy';
 import { IAccountsConfig } from './config/IAccountsConfig';
+import { BrowserManager } from './BrowserManager';
+import { BaseTask } from './task/BaseTask';
 
 export class Bot {
     public browser: puppeteer.Browser;
@@ -33,7 +34,7 @@ export class Bot {
     public captchaSolverServices: ICaptchaSolverService[] = [];
     public notifiers: INotifier[];
     public isUsingDeveloperMode: boolean;
-    public sessions: RawSession[] = [];
+    public browserManager: BrowserManager;
 
     private taskClassReferencesByStoreReferenceName: {[storeReferenceName: string]: { new(...args: any[]): BaseTask }} = {};
     private payPalBrowserContextsByEmail: {[email: string]: puppeteer.BrowserContext} = {};
@@ -44,6 +45,7 @@ export class Bot {
         this.remoteServer = null;
         this.options = null;
         this.isUsingDeveloperMode = null;
+        this.browserManager = new BrowserManager();
         this.start();
     }
 

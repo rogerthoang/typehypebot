@@ -1,18 +1,22 @@
-import { ISession } from './ISession';
-import { IRequestOptions, IResponse, RequestMethod } from '@util/request';
 import { Bot } from '../Bot';
-import { Browser, BrowserContext, NavigationOptions, Page } from 'puppeteer';
+import { BrowserContext, NavigationOptions, Page } from 'puppeteer';
+import { IProxy } from '@util/proxy';
 
-export class BrowserSession implements ISession {
-    static async build(browser: Browser): Promise<BrowserSession> {
-        const context = await browser.createIncognitoBrowserContext();
+export class BrowserSession {
+    static async build(bot: Bot, proxy: IProxy): Promise<BrowserSession> {
+        const context = await (await bot.browserManager.getBrowser(proxy)).createIncognitoBrowserContext();
         const page = await context.newPage();
         return new BrowserSession(context, page);
     }
 
-    constructor(context: BrowserContext, public page: Page) {}
+    constructor(private context: BrowserContext, public page: Page) {}
 
-    async goto(url: string, options?: NavigationOptions): Promise<void> {
+    async goto(url: string, options?: NavigationOptions) {
+
         await this.page.goto(url, options);
+    }
+
+    async close() {
+        await this.context.close();
     }
 }
