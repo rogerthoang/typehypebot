@@ -4,12 +4,14 @@ import * as request from 'request-promise-native';
 import { IProxy } from '@util/proxy';
 import { IRequestOptions, IResponse, makeRequest, RequestMethod } from '@util/request';
 import { CookieJar } from 'request';
+import { ICookie, ISession } from './ISession';
 
 let sessionId = 0;
 
-export class Session {
+export class RawSession implements ISession {
     public id: number;
     public urlHistory: {[time: number]: string};
+    public cookies: ICookie[] = [];
     public _url;
     public cookieJar: CookieJar;
     public extra: any;
@@ -47,7 +49,7 @@ export class Session {
         const cookies = await puppeteerPage.cookies();
         for(let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i];
-            this.cookieJar.setCookie(cookie.name + '=' + cookie.value + '; ' + (cookie.httpOnly ? 'HttpOnly; ' : '')/* + (cookie.secure ? 'Secure; ' : '')*/, (cookie.domain.charAt(0) === '.' ? ('http://www' + cookie.domain) : ('http://' + cookie.domain)));
+            this.cookieJar.setCookie(`${cookie.name}=${cookie.value}; ${cookie.httpOnly ? 'HttpOnly' : ''}`, cookie.domain.charAt(0) === '.' ? `http://www${cookie.domain}` : `http://${cookie.domain}`);
         }
     }
 
@@ -56,7 +58,7 @@ export class Session {
             const cookies = JSON.parse(value);
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i];
-                this.cookieJar.setCookie(cookie.name + '=' + cookie.value + '; ' + (cookie.httpOnly ? 'HttpOnly; ' : '')/* + (cookie.secure ? 'Secure; ' : '')*/, 'http://' + cookie.domain);
+                this.cookieJar.setCookie(`${cookie.name}=${cookie.value}; ${cookie.httpOnly ? 'HttpOnly' : ''}`, cookie.domain.charAt(0) === '.' ? `http://www${cookie.domain}` : `http://${cookie.domain}`);
             }
         }catch(error) {
 

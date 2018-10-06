@@ -1,4 +1,4 @@
-import { Session } from './session/Session';
+import { RawSession } from './session/RawSession';
 import { RemoteServer } from './remote/RemoteServer';
 import { BaseTask } from './task/BaseTask/BaseTask';
 import { Order } from './Order';
@@ -33,7 +33,7 @@ export class Bot {
     public captchaSolverServices: ICaptchaSolverService[] = [];
     public notifiers: INotifier[];
     public isUsingDeveloperMode: boolean;
-    public sessions: Session[] = [];
+    public sessions: RawSession[] = [];
 
     private taskClassReferencesByStoreReferenceName: {[storeReferenceName: string]: { new(...args: any[]): BaseTask }} = {};
     private payPalBrowserContextsByEmail: {[email: string]: puppeteer.BrowserContext} = {};
@@ -155,7 +155,7 @@ export class Bot {
             }
             console.log('Created orders\n');
 
-            this.browser = await puppeteer.launch({ headless: this.options.developer.isHeadlessBrowser });
+            this.browser = await puppeteer.launch({ headless: this.options.developer.isHeadlessBrowser, ignoreHTTPSErrors: true });
             if(!botData.developer.skipPayPalLogin) {
                 const promises: Promise<void>[] = [];
 

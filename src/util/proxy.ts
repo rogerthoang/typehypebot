@@ -97,6 +97,10 @@ export function getProxy(proxy: string, format: string = '#address#:#port#:#user
     ]);
 }
 
+export function getProxyString(proxy: IProxy): string {
+    return `${proxy.address}:${proxy.port}${proxy.username ? `${proxy.username}:${proxy.password}` : ''}`;
+}
+
 export function getProxiesArray(proxies: string[], format: string = '#address#:#port#:#username#:#password#'): IProxy[] {
     const array: IProxy[] = [];
     for(const proxy of proxies) {

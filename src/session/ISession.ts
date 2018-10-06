@@ -13,5 +13,5 @@ export interface ICookie {
 export interface ISession {
     url: string;
     cookies: ICookie[];
-    makeRequest: (method: RequestMethod, url: string, options: IRequestOptions) => Promise<IResponse>;
+    makeRequest?: (method: RequestMethod, url: string, options: IRequestOptions) => Promise<IResponse>;
 }
