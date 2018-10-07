@@ -1,5 +1,4 @@
 import { IInitSegment } from './IInitSegment';
-import { Browser, BrowserContext } from 'puppeteer';
 import { IPayPalPaymentData } from '../config/IOrdersConfig';
 import { BrowserManager } from '../BrowserManager';
 import { BrowserSession } from '../session/BrowserSession';
