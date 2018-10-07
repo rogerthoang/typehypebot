@@ -28,6 +28,7 @@ export class Bot {
 
     constructor() {
         this.browserManager = new BrowserManager();
+        this.registerTasks();
         this.start();
     }
 
@@ -46,10 +47,6 @@ export class Bot {
 
     protected async init(): Promise<void> {
         try {
-            console.log('Registering tasks...');
-            this.registerTasks();
-            console.log('Registered tasks\n');
-
             console.log('Loading configs...');
             const {
                 botConfig,
@@ -109,7 +106,7 @@ export class Bot {
             this.tasks = new CreateTasksSegment(this, tasksData, accountsData, orders, storesData, this.taskConstructorsByStoreReferenceName).getResult();
             console.log('Created tasks\n');
         }catch(error) {
-            console.log('Could not load config file(s)', error);
+            console.log('Could initialise bot', error);
         }
     }
 
