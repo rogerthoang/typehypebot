@@ -133,7 +133,19 @@ export abstract class BaseTask {
         log(`[${this.store.name}][${this.id}] ${string}`, realFile);
     }
 
-    async getCaptchaResponseToken(url: string, siteKey: string): Promise<string> {
-        return await this.bot.getFastestGeneratedCaptchaResponseToken(url, siteKey);
+    getCaptchaResponseToken(url: string, siteKey: string): Promise<string> {
+        let alreadyResolved = false;
+        let finished = null;
+
+        for(const captchaSolverService of this.bot.captchaSolverServices) {
+            captchaSolverService.getResponseToken(url, siteKey).then((responseToken: string) => {
+                if(!alreadyResolved) {
+                    alreadyResolved = true;
+                    finished(responseToken);
+                }
+            });
+        }
+
+        return new Promise(resolve => finished = resolve);
     }
 }

@@ -165,7 +165,7 @@ export class Bot {
                     console.log(`Logging in with PayPal ${email}...`);
 
                     promises.push(new Promise(async resolve => {
-                        const context = await this.createIncognitoBrowserContext();
+                        const context = await this.browser.createIncognitoBrowserContext();
                         const page = await context.newPage();
                         const password = passwordsByPayPalEmail[email];
 
@@ -247,28 +247,6 @@ export class Bot {
         }catch(error) {
             console.log('Could not load config file(s)', error);
         }
-    }
-
-    getFastestGeneratedCaptchaResponseToken(url: string, siteKey: string): Promise<string> {
-        let alreadyResolved = false;
-        let resolve = null;
-
-        for(const captchaSolverService of this.captchaSolverServices) {
-            captchaSolverService.getResponseToken(url, siteKey).then((responseToken: string) => {
-                if(!alreadyResolved) {
-                    alreadyResolved = true;
-                    resolve(responseToken);
-                }
-            });
-        }
-
-        return new Promise(actualResolve => {
-            resolve = actualResolve;
-        });
-    }
-
-    async createIncognitoBrowserContext(): Promise<puppeteer.BrowserContext> {
-        return await this.browser.createIncognitoBrowserContext();
     }
 
     async notify(message: any, identifiers?: {type?: NotifierType, name?: NotifierName}): Promise<void> {
