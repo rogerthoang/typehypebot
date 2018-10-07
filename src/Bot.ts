@@ -16,7 +16,6 @@ export type TaskConstructorsByStoreReferenceName = {
 };
 
 export class Bot {
-    public digitalOcean: DigitalOcean;
     public captchaSolverServices: ICaptchaSolverService[] = [];
     public notifiers: INotifier[] = [];
     public isUsingDeveloperMode: boolean = false;
@@ -106,7 +105,7 @@ export class Bot {
             this.tasks = new CreateTasksSegment(this, tasksData, accountsData, orders, storesData, this.taskConstructorsByStoreReferenceName).getResult();
             console.log('Created tasks\n');
         }catch(error) {
-            console.log('Could initialise bot', error);
+            console.log('Could not initialise bot', error);
         }
     }
 
