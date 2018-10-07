@@ -4,7 +4,6 @@ import { IGetSizeStepResults } from './GetSizeStep';
 import { RequestStep } from './RequestStep';
 import { ISizeItem } from './ProductPageRequestStep';
 import { IRequestOptions } from '@util/request';
-import { BaseTask } from '../BaseTask';
 
 export interface ICartRequestStepResults extends IGetSizeStepResults {
     cartSession: RawSession;

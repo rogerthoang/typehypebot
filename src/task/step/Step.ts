@@ -34,8 +34,7 @@ export abstract class Step {
         }
     }
 
-    abstract getReference(): StepConstructor;
-    abstract run(): void;
+    abstract run();
 
     nextStep(result: StepResult) {
         this.task.stepManager.nextStep(this.stepIndex, result);

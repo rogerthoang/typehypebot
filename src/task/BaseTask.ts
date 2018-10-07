@@ -15,8 +15,16 @@ let taskId = 0;
 
 export type TaskConstructor = { new(bot: Bot, taskData: ITaskData, startInit?: boolean): BaseTask };
 
+export type SingleStep = StepConstructor;
+export type ParallelSteps = StepConstructor[];
+export type ChoiceSteps = { [choice: string]: StepConstructor[] };
+
+export type Steps = (SingleStep | ParallelSteps | ChoiceSteps)[];
+
+export type StepsByBreakpoint = { [breakpoint: string]: ParallelSteps | ChoiceSteps };
+
 export enum StepBreakpoint {
-    ProductsBreakpoint = 0,
+    ProductsBreakpoint,
     PaymentsBreakpoint,
 }
 
@@ -36,10 +44,7 @@ export abstract class BaseTask {
 
     public stepManager: StepManager;
 
-    public firstRun = 0;
-    public lastRun = 0;
-    public lastReRun = 0;
-
+    private startedTime = 0;
     private hasStarted = false;
 
     constructor(public bot: Bot, taskData: ITaskData, startInit = true) {
@@ -47,7 +52,7 @@ export abstract class BaseTask {
 
         const baseData = taskData.baseData;
 
-        this.stepManager = new StepManager(this, []); // todo: use right steps
+        this.stepManager = new StepManager(this, this.getSteps()); // todo: use right steps
 
         this.startTime = baseData.startTime;
         this.mainProxy = baseData.mainProxy;
@@ -85,7 +90,7 @@ export abstract class BaseTask {
         setTimeout(() => {
             compensateInterval(() => {
                 this.log('Starting task');
-                this.run();
+                this.start();
             }, this.startTime - Date.now());
         });
     }
@@ -94,34 +99,41 @@ export abstract class BaseTask {
 
     protected abstract getSearchItemClassReference(): { new(data: ISearchItemData): SearchItem };
 
-    protected abstract getSteps(): (StepConstructor | StepBreakpoint)[];
-    protected abstract getProductSteps(): StepConstructor[];
-    protected abstract getPaymentSteps(): StepConstructor<PaymentStep> [];
+    protected abstract getStepsWithBreakpoints(): (SingleStep | StepBreakpoint)[];
+    protected abstract getProductSteps(): ParallelSteps;
+    protected abstract getPaymentSteps(): ChoiceSteps;
 
-    protected getStepsByBreakpoint(): { [breakpoint: number]: { new(...args: any[]): Step }[] } {
-        const stepsByBreakpoint: { [breakpoint: number]: { new(...args: any[]): Step }[] } = {};
-        stepsByBreakpoint[StepBreakpoint.PaymentsBreakpoint] = this.getPaymentSteps();
+    protected getStepsByBreakpoint(): StepsByBreakpoint {
+        const stepsByBreakpoint: { [breakpoint: string]: ParallelSteps | ChoiceSteps } = {};
         stepsByBreakpoint[StepBreakpoint.ProductsBreakpoint] = this.getProductSteps();
-
+        stepsByBreakpoint[StepBreakpoint.PaymentsBreakpoint] = this.getPaymentSteps();
         return stepsByBreakpoint;
     }
 
-    async run(): Promise<void> {
-        if(!this.hasStarted) {
-            this.firstRun = Date.now();
-            this.hasStarted = true;
-        }else {
-            this.lastRun = Date.now();
+    protected getSteps(): Steps {
+        const steps: Steps = [];
+
+        const stepsWithBreakpoints = this.getStepsWithBreakpoints();
+        const stepsByBreakpoint = this.getStepsByBreakpoint();
+        const breakpoints = Object.keys(stepsWithBreakpoints);
+
+        for(const step of stepsWithBreakpoints) {
+            const index = breakpoints.indexOf(String(<StepBreakpoint> step));
+            if(index > -1) { // breakpoint
+                steps.push(stepsByBreakpoint[String(<StepBreakpoint> step)]);
+            }else {
+                steps.push(<SingleStep> step);
+            }
         }
 
-        const firstStep = this.getSteps()[0];
-        const stepsByBreakpoint = this.getStepsByBreakpoint();
-        if(Number.isInteger(<number> firstStep)) { // is breakpoint
-            const breakpointStep = stepsByBreakpoint[<number> firstStep][0];
+        return steps;
+    }
 
-            new breakpointStep(this, this.mainProxy, {}, [0, 0], this.getSteps(), stepsByBreakpoint);
-        }else {
-            new (<{ new(...args: any[]): Step }> firstStep)(this, this.mainProxy, {}, [0, 0], this.getSteps(), stepsByBreakpoint);
+    async start(): Promise<void> {
+        if(!this.hasStarted) {
+            this.startedTime = Date.now();
+            this.hasStarted = true;
+            // todo: start running steps
         }
     }
 
@@ -129,10 +141,10 @@ export abstract class BaseTask {
         let realFile = file;
 
         if(file === undefined) {
-            realFile = `${this.store.name}_${this.id}.txt`;
+            realFile = `${this.id}_${this.store.name}.txt`;
         }
 
-        log(`[${this.store.name}][${this.id}] ${string}`, realFile);
+        log(`[${this.id}][${this.store.name}] ${string}`, realFile);
     }
 
     getCaptchaResponseToken(url: string, siteKey: string): Promise<string> {

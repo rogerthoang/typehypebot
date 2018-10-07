@@ -103,7 +103,7 @@ export class WebSocketServer extends EventListener {
         });
     }
 
-    stop(): void {
+    stop() {
         this.server.close();
         this.callEvent(WebSocketEvent.Close);
     }

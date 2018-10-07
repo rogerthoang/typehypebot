@@ -1,4 +1,4 @@
-import { BaseTask } from './BaseTask';
+import { BaseTask, Steps } from './BaseTask';
 import { Step } from './step/Step';
 
 export enum StepType {
@@ -21,12 +21,11 @@ export class StepManager {
 
     constructor(
         private task: BaseTask,
-        private steps: (StepConstructor | StepConstructor[] | { [key: string]: StepConstructor[] })[],
+        private steps: Steps,
     ) {}
 
     nextStep(currentStepIndex: StepIndex, result: StepResult, options?: { sessionId?: number, identifier?: string }): boolean {
-        const currentStep = this.steps[currentStepIndex[0]];
-        const currentStepType = Array.isArray(currentStep) ? StepType.Parallel : (typeof currentStep === 'object' ? StepType.Choice : StepType.Single);
+        const currentStepType = this.getStepType(currentStepIndex);
 
         const [primaryStepIndex, secondaryStepIndex] = currentStepIndex;
 
@@ -174,6 +173,11 @@ export class StepManager {
         new nextStep(this.task, nextStepIndex, nextStepResult).run();
 
         return true;
+    }
+
+    private getStepType(stepIndex: StepIndex): StepType {
+        const step = this.steps[stepIndex[0]];
+        return Array.isArray(step) ? StepType.Parallel : (typeof step === 'object' ? StepType.Choice : StepType.Single);
     }
 
     setParallelSessionsCount(stepIndex: StepIndex, sessionsCount: number) {
