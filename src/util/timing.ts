@@ -2,9 +2,9 @@ export interface ICompensateInterval {
     stop: () => void;
 }
 
-export function compensateInterval(func: () => void, interval: number, runAtStart: boolean = true): ICompensateInterval {
-    let previousTime: number = Date.now();
-    let stopped: boolean = false;
+export function compensateInterval(func: () => void, interval: number, runAtStart = true): ICompensateInterval {
+    let previousTime = Date.now();
+    let stopped = false;
 
     function timeout() {
         if(!stopped) {

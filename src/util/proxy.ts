@@ -40,7 +40,7 @@ function breakDown(string: string, format: string, identifiers: any): any {
         previousItem.rightSideCharacters = format.slice(previousItem.index + previousItem.identifier.length);
     }
 
-    let finished: boolean = false;
+    let finished = false;
     const brokenDown: any = {};
     for(let i = 0; i < internalIdentifiers.length; i++) {
         const item = internalIdentifiers[i];
@@ -76,7 +76,7 @@ export interface IProxy {
     password: string;
 }
 
-export function getProxy(proxy: string, format: string = '#address#:#port#:#username#:#password#'): IProxy {
+export function getProxy(proxy: string, format = '#address#:#port#:#username#:#password#'): IProxy {
     return breakDown(proxy, format, [
         {
             resultName: 'address',
@@ -101,7 +101,7 @@ export function getProxyString(proxy: IProxy): string {
     return `${proxy.address}:${proxy.port}${proxy.username ? `${proxy.username}:${proxy.password}` : ''}`;
 }
 
-export function getProxiesArray(proxies: string[], format: string = '#address#:#port#:#username#:#password#'): IProxy[] {
+export function getProxiesArray(proxies: string[], format = '#address#:#port#:#username#:#password#'): IProxy[] {
     const array: IProxy[] = [];
     for(const proxy of proxies) {
         array.push(getProxy(proxy, format));

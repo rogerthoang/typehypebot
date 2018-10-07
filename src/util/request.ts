@@ -214,47 +214,6 @@ export interface IPuppeteerCookie{
     session?: boolean;
 }
 
-export function updateCookieJarWithPuppeteerCookies(url: string, puppeteerCookies: IPuppeteerCookie[], cookieJar: CookieJar) {
-    const slashIndex = url.indexOf('/', 8);
-    const realUrl = url.slice(0, slashIndex === -1 ? url.length : slashIndex);
-
-    for(let i = 0; i < puppeteerCookies.length; i++) {
-        const cookie = puppeteerCookies[i];
-        cookieJar.setCookie(cookie.name + '=' + cookie.value + ';' + (cookie.httpOnly ? ' HttpOnly; ' : ''), realUrl);
-    }
-}
-
-export function getEditThisCookieImportValue(host: string, cookies: any[]): string {
-    const importCookies = [];
-
-    for(let i = 0; i < cookies.length; i++) {
-        const endCookieNameIndex = cookies[i].indexOf('=');
-        let value = cookies[i].slice(endCookieNameIndex + 1);
-
-        if(value.indexOf(';') > -1) {
-            value = value.slice(0, value.indexOf(';'));
-        }
-
-        value = value.replace(/"/g, '\\"');
-
-        importCookies.push({
-            domain: host,
-            name: cookies[i].slice(0, endCookieNameIndex),
-            value: value,
-            path: '/',
-            sameSite: 'no_restriction',
-            secure: false,
-            session: false,
-            storeId: '0',
-            hostOnly: false,
-            httpOnly: false,
-            id: i + 1,
-        });
-    }
-
-    return JSON.stringify(importCookies);
-}
-
 export function getHostname(url: string): string {
     let hostname = '';
 
@@ -266,7 +225,7 @@ export function getHostname(url: string): string {
     }
 
     if(hostname.slice(0, 4) !== 'www.') {
-        hostname = 'www.' + hostname;
+        hostname = `www.${hostname}`;
     }
 
     const dashIndex = hostname.indexOf('/');

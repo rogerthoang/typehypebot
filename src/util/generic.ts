@@ -61,7 +61,7 @@ export function clipboard(string: string): void {
     process.stdin.end();
 }
 
-export function open(url: string): void {
+export function open(url: string) {
     opn(url);
 }
 

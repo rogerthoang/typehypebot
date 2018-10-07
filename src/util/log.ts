@@ -16,7 +16,7 @@ function forceDigits(number: number, numberOfDigits: number, after: boolean = tr
 
 const timePrefix = Date.now();
 
-export function log(message: string, file: string = 'main.txt'): void {
+export function log(message: string, file: string = 'main.txt') {
     const date = new Date();
     const realMessage = `[${forceDigits(date.getHours(), 2, false)}:${forceDigits(date.getMinutes(), 2, false)}:${forceDigits(date.getSeconds(), 2, false)}:${forceDigits(date.getMilliseconds(), 3, true)}] ${message}`;
 
