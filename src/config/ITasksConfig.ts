@@ -31,7 +31,7 @@ export interface IProductData {
     };
     sizes: ISizesData;
     filter: {
-        title: {
+        name: {
             contains: string[];
             blocked: string[];
         },
