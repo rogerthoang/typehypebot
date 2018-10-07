@@ -1,15 +1,16 @@
 import { Bot } from '../Bot';
 import { BrowserContext, NavigationOptions, Page } from 'puppeteer';
 import { IProxy } from '@util/proxy';
+import { BrowserManager } from '../BrowserManager';
 
 export class BrowserSession {
-    static async build(bot: Bot, proxy: IProxy): Promise<BrowserSession> {
-        const context = await (await bot.browserManager.getBrowser(proxy)).createIncognitoBrowserContext();
+    static async build(browserManager: BrowserManager, proxy?: IProxy): Promise<BrowserSession> {
+        const context = await (await browserManager.getBrowser(proxy)).createIncognitoBrowserContext();
         const page = await context.newPage();
         return new BrowserSession(context, page);
     }
 
-    constructor(private context: BrowserContext, public page: Page) {}
+    constructor(public context: BrowserContext, public page: Page) {}
 
     async goto(url: string, options?: NavigationOptions) {
 

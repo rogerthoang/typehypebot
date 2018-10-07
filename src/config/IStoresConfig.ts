@@ -5,6 +5,10 @@ export interface IStoreData {
     domainsByRegion: {[regionCode: string]: string};
 }
 
+export interface IStores {
+    [referenceName: string]: IStoreData;
+}
+
 export interface IStoresConfig extends IConfig {
-    body: {[referenceName: string]: IStoreData};
+    body: IStores;
 }

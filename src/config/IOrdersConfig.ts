@@ -1,4 +1,4 @@
-    import { IConfig } from './IConfig';
+import { IConfig } from './IConfig';
 
 export enum PaymentMethod {
     PayPal = 'PayPal',
@@ -61,7 +61,7 @@ export interface ICustomPaymentData {
 
 export interface IPayPalPaymentData {
     authentication: {
-        method: string;
+        method: 'credentials';
         data: {
             email: string;
             password: string;

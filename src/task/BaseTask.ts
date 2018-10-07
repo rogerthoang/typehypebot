@@ -13,6 +13,8 @@ import { StepConstructor, StepManager } from './StepManager';
 
 let taskId = 0;
 
+export type TaskConstructor = { new(bot: Bot, taskData: ITaskData, startInit?: boolean): BaseTask };
+
 export enum StepBreakpoint {
     ProductsBreakpoint = 0,
     PaymentsBreakpoint,
