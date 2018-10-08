@@ -1,6 +1,6 @@
 import { IConfig } from './IConfig';
 
-export interface ITokens {
+export interface ITokensConfigData {
     serverProviders: {
         DigitalOcean?: string;
     };
@@ -42,6 +42,4 @@ export interface ITokens {
     };
 }
 
-export interface ITokensConfig extends IConfig {
-    body: ITokens;
-}
+export interface ITokensConfig extends IConfig<ITokensConfigData> {}

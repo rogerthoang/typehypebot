@@ -1,10 +1,6 @@
 import { IConfig } from './IConfig';
-import { IStoreData } from './IStoresConfig';
-import { Order } from '../Order';
-import { IAccountData } from './IAccountsConfig';
-import { IProxy } from '@util/proxy';
 
-export interface ISizesData {
+export interface ISizesConfigData {
     fallback: {
         sizes: number[],
         any: boolean;
@@ -12,24 +8,24 @@ export interface ISizesData {
     size: number;
 }
 
-export interface IMonitoringData {
+export interface IMonitoringConfigData {
     isMonitoring: boolean;
     startDelay: number;
 }
 
-export interface IStoreOptionsData {
+export interface IStoreOptionsConfigData {
     referenceName: string;
     region: string;
 }
 
-export interface IProductData {
+export interface IProductConfigData {
     search?: string;
     early?: {
         name: string;
         url: string;
         [x: string]: any;
     };
-    sizes: ISizesData;
+    sizes: ISizesConfigData;
     filter: {
         name: {
             contains: string[];
@@ -47,31 +43,13 @@ export interface ITaskConfigData {
         mainProxy: string;
         account: number;
         order: number;
-        monitoring: IMonitoringData;
-        storeOptions: IStoreOptionsData;
-        products: IProductData[];
+        monitoring: IMonitoringConfigData;
+        storeOptions: IStoreOptionsConfigData;
+        products: IProductConfigData[];
         interval: number;
     };
     extendedData: any;
     taskSpecificData: any;
 }
 
-export interface ITaskData {
-    baseData: {
-        startTime: number;
-        mainProxy: IProxy;
-        account: IAccountData;
-        order: Order;
-        monitoring: IMonitoringData;
-        store: IStoreData;
-        storeRegion: string;
-        products: IProductData[];
-        interval: number;
-    };
-    extendedData: any;
-    taskSpecificData: any;
-}
-
-export interface ITasksConfig extends IConfig {
-    body: ITaskConfigData[];
-}
+export interface ITasksConfig extends IConfig<ITaskConfigData[]> {}

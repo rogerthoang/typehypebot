@@ -1,31 +1,28 @@
 import { IConfig } from './IConfig';
 
 export enum PaymentMethod {
+    Empty = 'empty',
     PayPal = 'PayPal',
-    CreditCard = 'Credit Card',
-    BankTransfer = 'Bank Transfer',
+    CreditCard = 'credit card',
+    BankTransfer = 'bank transfer',
 }
 
-export interface IAddress {
+export interface IAddressData {
     company?: string;
     firstName: string;
     lastName: string;
     streetName: string;
     streetNumber: string;
-    streetName2?: string;
-    streetNumber2?: string;
+    streetName2: string;
+    streetNumber2: string;
     postcode: string;
     city: string;
     province: string;
     country: string;
 }
 
-export interface IEmailAddress extends IAddress {
-    email: string;
-}
-
-export interface IBillingAddressData extends IEmailAddress {
-    gender?: string;
+export interface IBillingAddressConfigData extends IAddressData {
+    gender: string;
     telephone: string;
     birthDate: {
         day: number;
@@ -34,76 +31,56 @@ export interface IBillingAddressData extends IEmailAddress {
     };
 }
 
-export interface IBillingAddress extends IBillingAddressData {
+export interface IShippingAddressConfigData extends IAddressData {}
 
-}
-
-export interface IShippingAddressData extends IEmailAddress {
-
-}
-
-export interface IShippingAddress extends IShippingAddressData {
-
-}
-
-export interface IPriceRange {
+export interface IPriceRangeConfigData {
     minimum: number;
     maximum: number;
 }
 
-export interface IEmptyPaymentData {
-
+export interface IPaymentData {
+    method: PaymentMethod;
+    data: any;
 }
 
-export interface ICustomPaymentData {
-    [x: string]: any;
+export interface IEmptyPaymentConfigData extends IPaymentData {
+    method: PaymentMethod.Empty;
+    data: {};
 }
 
-export interface IPayPalPaymentData {
-    authentication: {
-        method: 'credentials';
-        data: {
-            email: string;
-            password: string;
+export interface IPayPalPaymentConfigData extends IPaymentData {
+    method: PaymentMethod.PayPal;
+    data: {
+        authentication: {
+            method: 'credentials';
+            data: {
+                email: string;
+                password: string;
+            };
         };
     };
 }
 
-export interface ICreditCardPaymentData {
-    number: string;
-    expirationDate: {
-        month: number;
-        year: number;
+export interface ICreditCardPaymentData extends IPaymentData {
+    method: PaymentMethod.CreditCard;
+    data: {
+        number: string;
+        expirationDate: {
+            month: number;
+            year: number;
+        };
+        cvv: number;
     };
-    cvv: number;
 }
 
-export interface IPayment {
-    method: PaymentMethod;
-    data: IEmptyPaymentData|ICustomPaymentData|IPayPalPaymentData|ICreditCardPaymentData;
-}
-
-export interface IRegistration {
-    email: string;
-    password: string;
-}
-
-export interface IOrderData {
+export interface IOrderConfigData {
     active: boolean;
     canBeUsedMultipleTimesAtSameStore: boolean;
     maxUses: number;
-    registration: IRegistration;
-    billing: IBillingAddressData;
-    shipping: IShippingAddressData;
-    price: IPriceRange;
-    payment: IPayment;
+    billing: IBillingAddressConfigData;
+    shipping: IShippingAddressConfigData;
+    price: IPriceRangeConfigData;
+    payment: IEmptyPaymentConfigData | IPayPalPaymentConfigData | ICreditCardPaymentData;
 }
 
-export interface IOrder extends IOrderData {
-    billing: IBillingAddress;
-    shipping: IShippingAddress;
-}
-
-export interface IOrdersConfig extends IConfig {
-    body: IOrderData[];
-}
+export interface IOrdersConfig extends IConfig<IOrderConfigData> {}

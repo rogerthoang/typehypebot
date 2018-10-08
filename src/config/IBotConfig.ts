@@ -1,6 +1,6 @@
 import { IConfig } from './IConfig';
 
-export interface IBotOptions {
+export interface IBotConfigData {
     localAddress: string;
     remoteServerPort: number;
     proxyFormat: string;
@@ -10,6 +10,4 @@ export interface IBotOptions {
     };
 }
 
-export interface IBotConfig extends IConfig {
-    body: IBotOptions;
-}
+export interface IBotConfig extends IConfig<IBotConfigData> {}

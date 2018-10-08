@@ -1,10 +1,8 @@
 import { IConfig } from './IConfig';
 
-export interface IAccountData {
+export interface IAccountConfigData {
     username: string;
     password: string;
 }
 
-export interface IAccountsConfig extends IConfig {
-    body: IAccountData[];
-}
+export interface IAccountsConfig extends IConfig<IAccountConfigData[]> {}
