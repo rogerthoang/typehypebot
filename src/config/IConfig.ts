@@ -1,4 +1,4 @@
-export interface IConfig {
+export interface IConfig<BodyType = any> {
     isJSON?: boolean;
-    body: any;
+    body: BodyType;
 }
