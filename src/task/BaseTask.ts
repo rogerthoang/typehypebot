@@ -1,15 +1,16 @@
 import { ISearchItemData, SearchItem } from './step/SearchItem';
 import { Bot } from '../Bot';
-import { Step } from './step/Step';
 import { IProxy } from '@util/proxy';
 import { log } from '@util/log';
-import { IProductData, ITaskData } from '../config/ITasksConfig';
-import { IAccountData } from '../config/IAccountsConfig';
-import { IStoreData } from '../config/IStoresConfig';
+import {
+    IMonitoringConfigData,
+    IProductConfigData,
+} from '../config/ITasksConfig';
 import { compensateInterval } from '@util/timing';
-import { Order } from '../Order';
-import { PaymentStep } from './step/payment/PaymentStep';
 import { StepConstructor, StepManager } from './StepManager';
+import { Account } from '../config/Account';
+import { IStoreConfigData } from '../config/IStoresConfig';
+import { Order } from '../config/Order';
 
 let taskId = 0;
 
@@ -28,6 +29,22 @@ export enum StepBreakpoint {
     PaymentsBreakpoint,
 }
 
+export interface ITaskData {
+    baseData: {
+        startTime: number;
+        mainProxy: IProxy;
+        account: Account;
+        order: Order;
+        monitoring: IMonitoringConfigData;
+        store: IStoreConfigData;
+        storeRegion: string;
+        products: IProductConfigData[];
+        interval: number;
+    };
+    extendedData: any;
+    taskSpecificData: any;
+}
+
 export abstract class BaseTask {
     public id: number;
     public mainUrl: string;
@@ -36,10 +53,10 @@ export abstract class BaseTask {
     public mainProxy: IProxy;
     public interval: number;
     public startTime: number;
-    public store: IStoreData;
-    public account: IAccountData;
+    public store: IStoreConfigData;
+    public account: Account;
     public order: Order;
-    public products: IProductData[];
+    public products: IProductConfigData[];
     public searchItems: SearchItem[] = [];
 
     public stepManager: StepManager;
@@ -50,9 +67,9 @@ export abstract class BaseTask {
     constructor(public bot: Bot, taskData: ITaskData, startInit = true) {
         this.id = taskId++;
 
-        const baseData = taskData.baseData;
+        const { baseData } = taskData;
 
-        this.stepManager = new StepManager(this, this.getSteps()); // todo: use right steps
+        this.stepManager = new StepManager(this, this.getSteps());
 
         this.startTime = baseData.startTime;
         this.mainProxy = baseData.mainProxy;
