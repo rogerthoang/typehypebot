@@ -2,7 +2,7 @@ import { IConfig } from './IConfig';
 
 export interface IStoreConfigData {
     name: string;
-    domainsByRegion: {[regionCode: string]: string};
+    domainsByRegion: { [regionCode: string]: string };
 }
 
 export interface IStoresConfigData {
