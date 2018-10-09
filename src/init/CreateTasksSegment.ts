@@ -3,10 +3,10 @@ import { ITaskConfigData } from '../config/ITasksConfig';
 import { BaseTask, ITaskData } from '../task/BaseTask';
 import { getTimeFromString } from '@util/generic';
 import { getProxy } from '@util/proxy';
-import { Order } from '../Order';
 import { Bot, TaskConstructorsByStoreReferenceName } from '../Bot';
 import { IStoresConfigData } from '../config/IStoresConfig';
 import { Account } from '../config/Account';
+import { Order } from '../config/Order';
 
 export class CreateTasksSegment implements IInitSegment<BaseTask[]> {
     constructor(
