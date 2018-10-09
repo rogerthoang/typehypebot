@@ -2,7 +2,8 @@ import {
     IBillingAddressConfigData,
     IOrderConfigData,
     IPriceRangeConfigData,
-    IShippingAddressConfigData, PaymentConfigData
+    IShippingAddressConfigData,
+    PaymentConfigData,
 } from './IOrdersConfig';
 
 export class Order {
