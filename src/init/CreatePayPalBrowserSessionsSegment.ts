@@ -1,19 +1,19 @@
 import { IInitSegment } from './IInitSegment';
-import { IPayPalPaymentData } from '../config/IOrdersConfig';
 import { BrowserManager } from '../BrowserManager';
 import { BrowserSession } from '../session/BrowserSession';
+import { IPayPalPaymentConfigData } from '../config/IOrdersConfig';
 
 export type BrowserSessionsByEmail = { [email: string]: BrowserSession };
 
 export class CreatePayPalBrowserSessionsSegment implements IInitSegment<Promise<BrowserSessionsByEmail>> {
-    constructor(private browserManager: BrowserManager, private paymentDataset: IPayPalPaymentData[]) {}
+    constructor(private browserManager: BrowserManager, private paymentDataset: IPayPalPaymentConfigData[]) {}
 
     async getResult() {
         const browserSessionsByEmail: BrowserSessionsByEmail = {};
         const promises: Promise<void>[] = [];
 
         for(const paymentData of this.paymentDataset) {
-            const { email, password } = paymentData.authentication.data;
+            const { email, password } = paymentData.data.authentication.data;
 
             promises.push(new Promise(async resolve => {
                 const browserSession = await BrowserSession.build(this.browserManager);

@@ -1,12 +1,12 @@
 import { IInitSegment } from './IInitSegment';
 import { ICaptchaSolverService } from '../captcha/ICaptchaSolverService';
-import { ITokens } from '../config/ITokensConfig';
 import { AntiCaptchaCaptchaSolverService } from '../captcha/AntiCaptchaCaptchaSolverService';
 import { CaptchaSolutionsCaptchaSolverService } from '../captcha/CaptchaSolutionsCaptchaSolverService';
 import { TwoCaptchaCaptchaSolverService } from '../captcha/2CaptchaCaptchaSolverService';
+import { ITokensConfigData } from '../config/ITokensConfig';
 
 export class CreateCaptchaSolverServicesSegment implements IInitSegment<ICaptchaSolverService[]> {
-    constructor(private tokens: ITokens) {}
+    constructor(private tokens: ITokensConfigData) {}
 
     getResult() {
         const captchaSolverServices: ICaptchaSolverService[] = [];

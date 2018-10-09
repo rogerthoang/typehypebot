@@ -1,15 +1,15 @@
 import { IInitSegment } from './IInitSegment';
 import { INotifier } from '../notify/INotifier';
-import { ITokens } from '../config/ITokensConfig';
 import { NexmoNotifier } from '../notify/sms/NexmoNotifier';
 import { TwilioNotifier } from '../notify/sms/TwilioNotifier';
 import { DiscordNotifier } from '../notify/chat/DiscordNotifier';
 import { SlackNotifier } from '../notify/chat/SlackNotifier';
 import { TwitterNotifier } from '../notify/social/TwitterNotifier';
-import { INotifiersData } from '../config/INotifiersConfig';
+import { ITokensConfigData } from '../config/ITokensConfig';
+import { INotifiersConfigData } from '../config/INotifiersConfig';
 
 export class CreateNotifiersSegment implements IInitSegment<INotifier[]> {
-    constructor(private notifiersData: INotifiersData, private tokens: ITokens) {}
+    constructor(private notifiersData: INotifiersConfigData, private tokens: ITokensConfigData) {}
 
     getResult() {
         const notifiers: INotifier[] = [];

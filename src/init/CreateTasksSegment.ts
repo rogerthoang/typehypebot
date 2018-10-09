@@ -1,20 +1,20 @@
 import { IInitSegment } from './IInitSegment';
-import { ITaskConfigData, ITaskData } from '../config/ITasksConfig';
-import { BaseTask } from '../task/BaseTask';
+import { ITaskConfigData } from '../config/ITasksConfig';
+import { BaseTask, ITaskData } from '../task/BaseTask';
 import { getTimeFromString } from '@util/generic';
 import { getProxy } from '@util/proxy';
-import { IAccountData } from '../config/IAccountsConfig';
 import { Order } from '../Order';
-import { IStores } from '../config/IStoresConfig';
 import { Bot, TaskConstructorsByStoreReferenceName } from '../Bot';
+import { IStoresConfigData } from '../config/IStoresConfig';
+import { Account } from '../config/Account';
 
 export class CreateTasksSegment implements IInitSegment<BaseTask[]> {
     constructor(
         private bot: Bot,
         private tasksConfigData: ITaskConfigData[],
-        private accounts: IAccountData[],
+        private accounts: Account[],
         private orders: Order[],
-        private storesByReferenceName: IStores,
+        private storesByReferenceName: IStoresConfigData,
         private taskConstructorsByStoreReferenceName: TaskConstructorsByStoreReferenceName,
     ) {}
 
@@ -23,7 +23,7 @@ export class CreateTasksSegment implements IInitSegment<BaseTask[]> {
 
         for(const taskConfigData of this.tasksConfigData) {
             if(taskConfigData.active) {
-                const baseData = taskConfigData.baseData;
+                const { baseData } = taskConfigData;
                 const taskData: ITaskData = {
                     baseData: {
                         startTime: getTimeFromString(baseData.startTime),
