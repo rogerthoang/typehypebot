@@ -73,14 +73,16 @@ export interface ICreditCardPaymentData extends IPaymentData {
     };
 }
 
+export type PaymentConfigData = IEmptyPaymentConfigData | IPayPalPaymentConfigData | ICreditCardPaymentData;
+
 export interface IOrderConfigData {
     active: boolean;
     canBeUsedMultipleTimesAtSameStore: boolean;
     maxUses: number;
-    billing: IBillingAddressConfigData;
-    shipping: IShippingAddressConfigData;
-    price: IPriceRangeConfigData;
-    payment: IEmptyPaymentConfigData | IPayPalPaymentConfigData | ICreditCardPaymentData;
+    billingAddress: IBillingAddressConfigData;
+    shippingAddress: IShippingAddressConfigData;
+    priceRange: IPriceRangeConfigData;
+    payment: PaymentConfigData;
 }
 
-export interface IOrdersConfig extends IConfig<IOrderConfigData> {}
+export interface IOrdersConfig extends IConfig<IOrderConfigData[]> {}
