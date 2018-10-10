@@ -30,8 +30,8 @@ export class Bot {
         this.start();
     }
 
-    protected registerTask(storeReferenceName: string, taskClassReference: { new(...args: any[]): BaseTask }) {
-        this.taskConstructorsByStoreReferenceName[storeReferenceName] = taskClassReference;
+    protected registerTask(storeReferenceName: string, task: TaskConstructor) {
+        this.taskConstructorsByStoreReferenceName[storeReferenceName] = task;
     }
 
     protected registerTasks(): void {}
