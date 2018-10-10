@@ -7,7 +7,7 @@ import {
     IProductConfigData,
 } from '../config/ITasksConfig';
 import { compensateInterval } from '@util/timing';
-import { StepConstructor, StepManager } from './StepManager';
+import { StartOptions, StepConstructor, StepManager } from './StepManager';
 import { Account } from '../config/Account';
 import { IStoreConfigData } from '../config/IStoresConfig';
 import { Order } from '../config/Order';
@@ -146,11 +146,15 @@ export abstract class BaseTask {
         return steps;
     }
 
+    protected getStartOptions(): StartOptions {
+        return {};
+    }
+
     async start(): Promise<void> {
         if(!this.hasStarted) {
             this.startedTime = Date.now();
             this.hasStarted = true;
-            // todo: start running steps
+            this.stepManager.startStep(this.getStartOptions());
         }
     }
 
@@ -164,7 +168,7 @@ export abstract class BaseTask {
         log(`[${this.id}][${this.store.name}] ${string}`, realFile);
     }
 
-    getCaptchaResponseToken(url: string, siteKey: string): Promise<string> {
+    getCaptchaResponseToken(url: string, siteKey: string): Promise<string> { // todo: not really relevant here, move to step class
         let alreadyResolved = false;
         let finished = null;
 

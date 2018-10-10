@@ -10,8 +10,10 @@ export enum StepType {
 type AnyObject = { [x: string]: any };
 
 export type StepIndex = [number, number]; // primary step index, secondary step index
-export type StepConstructor<StepType extends Step = Step> = { new(...args: any[]): StepType };
+export type StepConstructor<StepType extends Step = Step> = { new(task: BaseTask, stepIndex: StepIndex, results: StepResult): StepType };
 export type StepResult = AnyObject;
+
+export type StartOptions = { parallelSessionsCount?: number, identifier?: string };
 
 export class StepManager {
     private parallelSessionsCount: { [stepIndex: number]: number } = {};
@@ -23,6 +25,29 @@ export class StepManager {
         private task: BaseTask,
         private steps: Steps,
     ) {}
+
+    startStep(options?: StartOptions) {
+        const stepType = this.getStepType([0, null]);
+        let step: StepConstructor = null;
+
+        switch(stepType) {
+            case StepType.Single:
+                step = <StepConstructor> this.steps[0];
+
+                for(let i = 0; i < options.parallelSessionsCount; i++) {
+                    new step(this.task, [0, null], {}).run();
+                }
+                return;
+            case StepType.Parallel:
+                step = this.steps[0][0];
+                break;
+            case StepType.Choice:
+                step = this.steps[0][options.identifier][0];
+                break;
+        }
+
+        new step(this.task, [0, 0], {}).run();
+    }
 
     nextStep(currentStepIndex: StepIndex, result: StepResult, options?: { sessionId?: number, identifier?: string }): boolean {
         const currentStepType = this.getStepType(currentStepIndex);
