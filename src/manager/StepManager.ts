@@ -1,5 +1,5 @@
-import { BaseTask, Steps } from './BaseTask';
-import { Step } from './step/Step';
+import { BaseTask, Steps } from '../task/BaseTask';
+import { Step } from '../task/step/Step';
 
 export enum StepType {
     Single = 0,

@@ -1,6 +1,6 @@
 import { BaseTask } from '../BaseTask';
 import { IRequestOptions, IResponse, makeRequest, RequestMethod } from '@util/request';
-import { StepConstructor, StepIndex, StepResult, StepType } from '../StepManager';
+import { StepConstructor, StepIndex, StepResult, StepType } from '../../manager/StepManager';
 
 export interface IStepResults {
     [x: string]: any;

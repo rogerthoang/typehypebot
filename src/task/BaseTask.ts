@@ -7,7 +7,7 @@ import {
     ProductConfigData,
 } from '../config/ITasksConfig';
 import { compensateInterval } from '@util/timing';
-import { StartOptions, StepConstructor, StepManager } from './StepManager';
+import { StartOptions, StepConstructor, StepManager } from '../manager/StepManager';
 import { Account } from '../config/Account';
 import { StoreConfigData } from '../config/IStoresConfig';
 import { Order } from '../config/Order';

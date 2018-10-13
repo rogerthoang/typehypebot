@@ -1,6 +1,6 @@
 import { ICaptchaSolverService } from './captcha/ICaptchaSolverService';
 import { INotifier, NotifierName, NotifierType } from './notify/INotifier';
-import { BrowserManager } from './BrowserManager';
+import { BrowserManager } from './manager/BrowserManager';
 import { BaseTask, TaskConstructor } from './task/BaseTask';
 import { CreateTasksSegment } from './init/CreateTasksSegment';
 import { BrowserSessionsByEmail, CreatePayPalBrowserSessionsSegment } from './init/CreatePayPalBrowserSessionsSegment';

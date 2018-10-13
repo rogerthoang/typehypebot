@@ -3,7 +3,7 @@ import { SearchItem } from './SearchItem';
 import { containsAnArrayItem, containsArrayItems } from '@util/generic';
 import { compensateInterval, ICompensateInterval } from '@util/timing';
 import { BaseTask } from '../BaseTask';
-import { StepIndex, StepResult } from '../StepManager';
+import { StepIndex, StepResult } from '../../manager/StepManager';
 
 export interface IGetSearchItemStepResults extends IStepResults {
     searchItem: SearchItem;

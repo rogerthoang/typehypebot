@@ -1,5 +1,5 @@
 import { IInitSegment } from './IInitSegment';
-import { BrowserManager } from '../BrowserManager';
+import { BrowserManager } from '../manager/BrowserManager';
 import { BrowserSession } from '../session/BrowserSession';
 import { IPayPalPaymentConfigData } from '../config/IOrdersConfig';
 
