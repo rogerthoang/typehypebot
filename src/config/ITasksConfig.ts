@@ -1,31 +1,31 @@
 import { IConfig } from './IConfig';
 
-export interface ISizesConfigData {
+export type SizesConfigData = {
     fallback: {
         sizes: number[],
         any: boolean;
     };
     size: number;
-}
+};
 
-export interface IMonitoringConfigData {
+export type MonitoringConfigData = {
     isMonitoring: boolean;
     startDelay: number;
-}
+};
 
-export interface IStoreOptionsConfigData {
+export type StoreOptionsConfigData = {
     referenceName: string;
     region: string;
-}
+};
 
-export interface IProductConfigData {
+export type ProductConfigData = {
     search?: string;
     early?: {
         name: string;
         url: string;
         [x: string]: any;
     };
-    sizes: ISizesConfigData;
+    sizes: SizesConfigData;
     filter: {
         name: {
             contains: string[];
@@ -34,22 +34,22 @@ export interface IProductConfigData {
     };
     proxies: string[];
     sessionsPerProxy: number;
-}
+};
 
-export interface ITaskConfigData {
+export type TaskConfigData = {
     active: boolean;
     baseData: {
         startTime: string;
         mainProxy: string;
         account: number;
         order: number;
-        monitoring: IMonitoringConfigData;
-        storeOptions: IStoreOptionsConfigData;
-        products: IProductConfigData[];
+        monitoring: MonitoringConfigData;
+        storeOptions: StoreOptionsConfigData;
+        products: ProductConfigData[];
         interval: number;
     };
     extendedData: any;
     taskSpecificData: any;
-}
+};
 
-export interface ITasksConfig extends IConfig<ITaskConfigData[]> {}
+export interface ITasksConfig extends IConfig<TaskConfigData[]> {}

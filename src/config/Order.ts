@@ -1,13 +1,13 @@
 import {
     IBillingAddressConfigData,
-    IOrderConfigData,
-    IPriceRangeConfigData,
+    OrderConfigData,
+    PriceRangeConfigData,
     IShippingAddressConfigData,
     PaymentConfigData,
 } from './IOrdersConfig';
 
 export class Order {
-    static createFrom(orderConfigData: IOrderConfigData) {
+    static createFrom(orderConfigData: OrderConfigData) {
         return new Order(
             orderConfigData.canBeUsedMultipleTimesAtSameStore,
             orderConfigData.maxUses,
@@ -23,7 +23,7 @@ export class Order {
         public maxUses: number,
         public billingAddress: IBillingAddressConfigData,
         public shippingAddress: IShippingAddressConfigData,
-        public priceRange: IPriceRangeConfigData,
+        public priceRange: PriceRangeConfigData,
         public payment: PaymentConfigData,
     ) {}
 

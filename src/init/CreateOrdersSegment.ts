@@ -1,9 +1,9 @@
 import { IInitSegment } from './IInitSegment';
 import { Order } from '../config/Order';
-import { IOrderConfigData, IPayPalPaymentConfigData, PaymentMethod } from '../config/IOrdersConfig';
+import { OrderConfigData, IPayPalPaymentConfigData, PaymentMethod } from '../config/IOrdersConfig';
 
 export class CreateOrdersSegment implements IInitSegment<{ orders: Order[]; payPalPaymentConfigDataset: IPayPalPaymentConfigData[]; }> {
-    constructor(private ordersConfigData: IOrderConfigData[]) {}
+    constructor(private ordersConfigData: OrderConfigData[]) {}
 
     getResult() {
         const orders: Order[] = [];

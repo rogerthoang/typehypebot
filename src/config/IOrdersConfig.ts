@@ -33,10 +33,10 @@ export interface IBillingAddressConfigData extends IAddressData {
 
 export interface IShippingAddressConfigData extends IAddressData {}
 
-export interface IPriceRangeConfigData {
+export type PriceRangeConfigData = {
     minimum: number;
     maximum: number;
-}
+};
 
 export interface IPaymentData {
     method: PaymentMethod;
@@ -75,14 +75,14 @@ export interface ICreditCardPaymentData extends IPaymentData {
 
 export type PaymentConfigData = IEmptyPaymentConfigData | IPayPalPaymentConfigData | ICreditCardPaymentData;
 
-export interface IOrderConfigData {
+export type OrderConfigData = {
     active: boolean;
     canBeUsedMultipleTimesAtSameStore: boolean;
     maxUses: number;
     billingAddress: IBillingAddressConfigData;
     shippingAddress: IShippingAddressConfigData;
-    priceRange: IPriceRangeConfigData;
+    priceRange: PriceRangeConfigData;
     payment: PaymentConfigData;
-}
+};
 
-export interface IOrdersConfig extends IConfig<IOrderConfigData[]> {}
+export interface IOrdersConfig extends IConfig<OrderConfigData[]> {}

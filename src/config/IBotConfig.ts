@@ -1,6 +1,6 @@
 import { IConfig } from './IConfig';
 
-export interface IBotConfigData {
+export type BotConfigData = {
     localAddress: string;
     remoteServerPort: number;
     proxyFormat: string;
@@ -8,6 +8,6 @@ export interface IBotConfigData {
         skipPayPalLogin: boolean;
         isHeadlessBrowser: boolean;
     };
-}
+};
 
-export interface IBotConfig extends IConfig<IBotConfigData> {}
+export interface IBotConfig extends IConfig<BotConfigData> {}

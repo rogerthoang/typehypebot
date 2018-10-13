@@ -5,11 +5,11 @@ import { TwilioNotifier } from '../notify/sms/TwilioNotifier';
 import { DiscordNotifier } from '../notify/chat/DiscordNotifier';
 import { SlackNotifier } from '../notify/chat/SlackNotifier';
 import { TwitterNotifier } from '../notify/social/TwitterNotifier';
-import { ITokensConfigData } from '../config/ITokensConfig';
-import { INotifiersConfigData } from '../config/INotifiersConfig';
+import { TokensConfigData } from '../config/ITokensConfig';
+import { NotifiersConfigData } from '../config/INotifiersConfig';
 
 export class CreateNotifiersSegment implements IInitSegment<INotifier[]> {
-    constructor(private notifiersData: INotifiersConfigData, private tokens: ITokensConfigData) {}
+    constructor(private notifiersData: NotifiersConfigData, private tokens: TokensConfigData) {}
 
     getResult() {
         const notifiers: INotifier[] = [];

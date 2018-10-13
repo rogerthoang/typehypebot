@@ -1,8 +1,9 @@
 import { IConfig } from './IConfig';
 
-export interface IAccountConfigData {
+export type AccountConfigData = {
     username: string;
     password: string;
-}
+    isRegistered: boolean;
+};
 
-export interface IAccountsConfig extends IConfig<IAccountConfigData[]> {}
+export interface IAccountsConfig extends IConfig<AccountConfigData[]> {}

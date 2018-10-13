@@ -3,10 +3,10 @@ import { ICaptchaSolverService } from '../captcha/ICaptchaSolverService';
 import { AntiCaptchaCaptchaSolverService } from '../captcha/AntiCaptchaCaptchaSolverService';
 import { CaptchaSolutionsCaptchaSolverService } from '../captcha/CaptchaSolutionsCaptchaSolverService';
 import { TwoCaptchaCaptchaSolverService } from '../captcha/2CaptchaCaptchaSolverService';
-import { ITokensConfigData } from '../config/ITokensConfig';
+import { TokensConfigData } from '../config/ITokensConfig';
 
 export class CreateCaptchaSolverServicesSegment implements IInitSegment<ICaptchaSolverService[]> {
-    constructor(private tokens: ITokensConfigData) {}
+    constructor(private tokens: TokensConfigData) {}
 
     getResult() {
         const captchaSolverServices: ICaptchaSolverService[] = [];

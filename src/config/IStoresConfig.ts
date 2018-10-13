@@ -1,12 +1,12 @@
 import { IConfig } from './IConfig';
 
-export interface IStoreConfigData {
+export type StoreConfigData = {
     name: string;
     domainsByRegion: { [regionCode: string]: string };
-}
+};
 
-export interface IStoresConfigData {
-    [referenceName: string]: IStoreConfigData;
-}
+export type StoresConfigData = {
+    [referenceName: string]: StoreConfigData;
+};
 
-export interface IStoresConfig extends IConfig<IStoresConfigData> {}
+export interface IStoresConfig extends IConfig<StoresConfigData> {}

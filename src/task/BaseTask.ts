@@ -3,13 +3,13 @@ import { Bot } from '../Bot';
 import { IProxy } from '@util/proxy';
 import { log } from '@util/log';
 import {
-    IMonitoringConfigData,
-    IProductConfigData,
+    MonitoringConfigData,
+    ProductConfigData,
 } from '../config/ITasksConfig';
 import { compensateInterval } from '@util/timing';
 import { StartOptions, StepConstructor, StepManager } from './StepManager';
 import { Account } from '../config/Account';
-import { IStoreConfigData } from '../config/IStoresConfig';
+import { StoreConfigData } from '../config/IStoresConfig';
 import { Order } from '../config/Order';
 
 let taskId = 0;
@@ -35,10 +35,10 @@ export interface ITaskData {
         mainProxy: IProxy;
         account: Account;
         order: Order;
-        monitoring: IMonitoringConfigData;
-        store: IStoreConfigData;
+        monitoring: MonitoringConfigData;
+        store: StoreConfigData;
         storeRegion: string;
-        products: IProductConfigData[];
+        products: ProductConfigData[];
         interval: number;
     };
     extendedData: any;
@@ -53,10 +53,10 @@ export abstract class BaseTask {
     public mainProxy: IProxy;
     public interval: number;
     public startTime: number;
-    public store: IStoreConfigData;
+    public store: StoreConfigData;
     public account: Account;
     public order: Order;
-    public products: IProductConfigData[];
+    public products: ProductConfigData[];
     public searchItems: SearchItem[] = [];
 
     public stepManager: StepManager;

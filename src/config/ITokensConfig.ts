@@ -1,6 +1,6 @@
 import { IConfig } from './IConfig';
 
-export interface ITokensConfigData {
+export type TokensConfigData = {
     serverProviders: {
         DigitalOcean?: string;
     };
@@ -40,6 +40,6 @@ export interface ITokensConfigData {
             };
         };
     };
-}
+};
 
-export interface ITokensConfig extends IConfig<ITokensConfigData> {}
+export interface ITokensConfig extends IConfig<TokensConfigData> {}

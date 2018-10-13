@@ -1,20 +1,20 @@
 import { IInitSegment } from './IInitSegment';
-import { ITaskConfigData } from '../config/ITasksConfig';
+import { TaskConfigData } from '../config/ITasksConfig';
 import { BaseTask, ITaskData } from '../task/BaseTask';
 import { getTimeFromString } from '@util/generic';
 import { getProxy } from '@util/proxy';
 import { Bot, TaskConstructorsByStoreReferenceName } from '../Bot';
-import { IStoresConfigData } from '../config/IStoresConfig';
+import { StoresConfigData } from '../config/IStoresConfig';
 import { Account } from '../config/Account';
 import { Order } from '../config/Order';
 
 export class CreateTasksSegment implements IInitSegment<BaseTask[]> {
     constructor(
         private bot: Bot,
-        private tasksConfigData: ITaskConfigData[],
+        private tasksConfigData: TaskConfigData[],
         private accounts: Account[],
         private orders: Order[],
-        private storesByReferenceName: IStoresConfigData,
+        private storesByReferenceName: StoresConfigData,
         private taskConstructorsByStoreReferenceName: TaskConstructorsByStoreReferenceName,
     ) {}
 

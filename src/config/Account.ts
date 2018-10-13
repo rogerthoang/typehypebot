@@ -1,4 +1,4 @@
-import { IAccountConfigData } from './IAccountsConfig';
+import { AccountConfigData } from './IAccountsConfig';
 import * as faker from 'faker';
 import { generateRandomString } from '@util/generic';
 
@@ -12,7 +12,7 @@ function randomify(string: string, randomStringLength?: number) {
 }
 
 export class Account {
-    static createFrom(accountConfigData: IAccountConfigData) {
+    static createFrom(accountConfigData: AccountConfigData) {
         return new Account(randomify(accountConfigData.username, 12), randomify(accountConfigData.password, 12));
     }
 

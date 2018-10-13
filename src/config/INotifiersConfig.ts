@@ -1,6 +1,6 @@
 import { IConfig } from './IConfig';
 
-export interface INotifiersConfigData {
+export type NotifiersConfigData = {
     sms: {
         Nexmo?: {
             fromNumber: string;
@@ -22,6 +22,6 @@ export interface INotifiersConfigData {
             botName?: string;
         };
     };
-}
+};
 
-export interface INotifiersConfig extends IConfig<INotifiersConfigData> {}
+export interface INotifiersConfig extends IConfig<NotifiersConfigData> {}
