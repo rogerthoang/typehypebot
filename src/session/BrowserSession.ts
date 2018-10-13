@@ -1,7 +1,6 @@
-import { Bot } from '../Bot';
 import { BrowserContext, NavigationOptions, Page } from 'puppeteer';
 import { IProxy } from '@util/proxy';
-import { BrowserManager } from '../BrowserManager';
+import { BrowserManager } from '../manager/BrowserManager';
 
 export class BrowserSession {
     static async build(browserManager: BrowserManager, proxy?: IProxy): Promise<BrowserSession> {
@@ -13,7 +12,6 @@ export class BrowserSession {
     constructor(public context: BrowserContext, public page: Page) {}
 
     async goto(url: string, options?: NavigationOptions) {
-
         await this.page.goto(url, options);
     }
 
