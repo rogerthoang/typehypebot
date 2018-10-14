@@ -1,4 +1,4 @@
-import { ISearchItemData, SearchItem } from './step/SearchItem';
+import { ISearchItemData, SearchItem, SearchItemConstructor } from './step/SearchItem';
 import { Bot } from '../Bot';
 import { IProxy } from '@util/proxy';
 import { log } from '@util/log';
@@ -37,7 +37,7 @@ export interface ITaskData {
         order: Order;
         monitoring: MonitoringConfigData;
         store: StoreConfigData;
-        storeRegion: string;
+        region: string;
         products: ProductConfigData[];
         interval: number;
     };
@@ -54,6 +54,7 @@ export abstract class BaseTask {
     public interval: number;
     public startTime: number;
     public store: StoreConfigData;
+    public region: string;
     public account: Account;
     public order: Order;
     public products: ProductConfigData[];
@@ -62,7 +63,9 @@ export abstract class BaseTask {
     public stepManager: StepManager;
 
     private startedTime = 0;
-    private hasStarted = false;
+    private running = false;
+
+    protected startOptions: StartOptions = {};
 
     constructor(public bot: Bot, taskData: ITaskData, startInit = true) {
         this.id = taskId++;
@@ -76,8 +79,9 @@ export abstract class BaseTask {
         this.account = baseData.account;
         this.isMonitoring = baseData.monitoring.isMonitoring;
         this.store = baseData.store;
+        this.region = baseData.region;
         this.startDelay = this.isMonitoring ? baseData.monitoring.startDelay : 0;
-        this.mainUrl = `http://www.${baseData.store.domainsByRegion[baseData.storeRegion]}`;
+        this.mainUrl = `http://www.${baseData.store.domainsByRegion[baseData.region]}`;
         this.interval = baseData.interval;
         this.order = baseData.order;
         this.startTime = baseData.startTime;
@@ -112,9 +116,9 @@ export abstract class BaseTask {
         });
     }
 
-    protected abstract init(done?: () => void): void;
+    protected abstract init(done?: () => void);
 
-    protected abstract getSearchItemClassReference(): { new(data: ISearchItemData): SearchItem };
+    protected abstract getSearchItemClassReference(): SearchItemConstructor;
 
     protected abstract getStepsWithBreakpoints(): (SingleStep | StepBreakpoint)[];
     protected abstract getProductSteps(): ParallelSteps;
@@ -127,7 +131,7 @@ export abstract class BaseTask {
         return stepsByBreakpoint;
     }
 
-    protected getSteps(): Steps {
+    private getSteps(): Steps {
         const steps: Steps = [];
 
         const stepsWithBreakpoints = this.getStepsWithBreakpoints();
@@ -146,19 +150,22 @@ export abstract class BaseTask {
         return steps;
     }
 
-    protected getStartOptions(): StartOptions {
-        return {};
-    }
-
-    async start(): Promise<void> {
-        if(!this.hasStarted) {
+    start() {
+        if(!this.running) {
             this.startedTime = Date.now();
-            this.hasStarted = true;
-            this.stepManager.startStep(this.getStartOptions());
+            this.running = true;
+            this.stepManager.startStep(this.startOptions);
         }
     }
 
-    log(string: string, file?: string): void {
+    stop() {
+        if(this.running) {
+            this.running = false;
+            this.stepManager.halt = true;
+        }
+    }
+
+    log(string: string, file?: string) {
         let realFile = file;
 
         if(file === undefined) {
