@@ -7,6 +7,7 @@ import { Bot, TaskConstructorsByStoreReferenceName } from '../Bot';
 import { StoresConfigData } from '../config/IStoresConfig';
 import { Account } from '../config/Account';
 import { Order } from '../config/Order';
+import { Store } from '../config/Store';
 
 export class CreateTasksSegment implements IInitSegment<BaseTask[]> {
     constructor(
@@ -14,16 +15,23 @@ export class CreateTasksSegment implements IInitSegment<BaseTask[]> {
         private tasksConfigData: TaskConfigData[],
         private accounts: Account[],
         private orders: Order[],
-        private storesByReferenceName: StoresConfigData,
+        private storesConfigDataByName: StoresConfigData,
         private taskConstructorsByStoreReferenceName: TaskConstructorsByStoreReferenceName,
     ) {}
 
     getResult() {
         const tasks: BaseTask[] = [];
+        const storesByName: { [name: string]: Store } = {};
 
         for(const taskConfigData of this.tasksConfigData) {
             if(taskConfigData.active) {
                 const { baseData } = taskConfigData;
+                const { storeOptions } = baseData;
+
+                if(storesByName[storeOptions.name] === undefined) {
+                    storesByName[storeOptions.name] = Store.createFrom(this.storesConfigDataByName[storeOptions.name]);
+                }
+
                 const taskData: ITaskData = {
                     baseData: {
                         startTime: getTimeFromString(baseData.startTime),
@@ -31,15 +39,15 @@ export class CreateTasksSegment implements IInitSegment<BaseTask[]> {
                         account: this.accounts[baseData.account],
                         order: this.orders[baseData.order],
                         monitoring: baseData.monitoring,
-                        store: this.storesByReferenceName[baseData.storeOptions.referenceName],
-                        storeRegion: baseData.storeOptions.region,
+                        store: storesByName[storeOptions.name],
+                        region: baseData.storeOptions.region,
                         products: baseData.products,
                         interval: baseData.interval,
                     },
                     extendedData: taskConfigData.extendedData,
                     taskSpecificData: taskConfigData.taskSpecificData,
                 };
-                const taskClassReference = this.taskConstructorsByStoreReferenceName[baseData.storeOptions.referenceName];
+                const taskClassReference = this.taskConstructorsByStoreReferenceName[baseData.storeOptions.name];
                 tasks.push(new taskClassReference(this.bot, taskData));
             }
         }
