@@ -16,6 +16,8 @@ export type StepResult = AnyObject;
 export type StartOptions = { parallelSessionsCount?: number, identifier?: string };
 
 export class StepManager {
+    public halt = false;
+
     private parallelSessionsCount: { [stepIndex: number]: number } = {};
     private generalResults: { [stepIndex: number]: AnyObject } = {};
     private parallelResults: { [stepIndex: number]: { [sessionId: number]: { [secondaryStepIndex: number]: AnyObject } } } = {};
@@ -27,6 +29,8 @@ export class StepManager {
     ) {}
 
     startStep(options?: StartOptions) {
+        this.halt = false;
+
         const stepType = this.getStepType([0, null]);
         let step: StepConstructor = null;
 
@@ -50,6 +54,10 @@ export class StepManager {
     }
 
     nextStep(currentStepIndex: StepIndex, result: StepResult, options?: { sessionId?: number, identifier?: string }): boolean {
+        if(this.halt) {
+            return false;
+        }
+
         const currentStepType = this.getStepType(currentStepIndex);
 
         const [primaryStepIndex, secondaryStepIndex] = currentStepIndex;
