@@ -3,6 +3,8 @@ export interface ISearchItemData {
     name: string;
 }
 
+export type SearchItemConstructor = { new(data: ISearchItemData): SearchItem };
+
 export class SearchItem {
     public url: string;
     public name: string;

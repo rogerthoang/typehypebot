@@ -9,41 +9,38 @@ import { CreateCaptchaSolverServicesSegment } from './init/CreateCaptchaSolverSe
 import { LoadConfigsSegment } from './init/LoadConfigsSegment';
 import { CreateOrdersSegment } from './init/CreateOrdersSegment';
 import { CreateAccountsSegment } from './init/CreateAccountsSegment';
+import { TaskManager } from './manager/TaskManager';
 
 export type TaskConstructorsByStoreReferenceName = {
-    [storeReferenceName: string]: TaskConstructor;
+    [storeName: string]: TaskConstructor;
 };
 
 export class Bot {
     public captchaSolverServices: ICaptchaSolverService[] = [];
     public notifiers: INotifier[] = [];
     public isUsingDeveloperMode = false;
+
     public browserManager: BrowserManager;
+    public taskManager: TaskManager = null;
 
     private taskConstructorsByStoreReferenceName: TaskConstructorsByStoreReferenceName = {};
     private payPalBrowserSessionsByEmail: BrowserSessionsByEmail = {};
-    private tasks: BaseTask[] = [];
 
     constructor() {
         this.browserManager = new BrowserManager();
         this.registerTasks();
-        this.start();
+        this.init(() => {
+            this.taskManager.startAll();
+        });
     }
 
     protected registerTask(storeReferenceName: string, task: TaskConstructor) {
         this.taskConstructorsByStoreReferenceName[storeReferenceName] = task;
     }
 
-    protected registerTasks(): void {}
+    protected registerTasks() {}
 
-    private async start(): Promise<void> {
-        await this.init();
-        for(const task of this.tasks) {
-            task.start();
-        }
-    }
-
-    protected async init(): Promise<void> {
+    protected async init(doneInit: () => void) {
         try {
             console.log('Loading configs...');
             const {
@@ -88,14 +85,18 @@ export class Bot {
             console.log('Created accounts\n');
 
             console.log('Creating tasks...');
-            this.tasks = new CreateTasksSegment(this, tasksConfigData, accounts, orders, storesConfigData, this.taskConstructorsByStoreReferenceName).getResult();
+            const tasks = new CreateTasksSegment(this, tasksConfigData, accounts, orders, storesConfigData, this.taskConstructorsByStoreReferenceName).getResult();
             console.log('Created tasks\n');
+
+            this.taskManager = new TaskManager(tasks);
+
+            doneInit();
         }catch(error) {
             console.log('Could not initialise bot', error);
         }
     }
 
-    async notify(message: any, identifiers?: {type?: NotifierType, name?: NotifierName}): Promise<void> {
+    async notify(message: any, identifiers?: {type?: NotifierType, name?: NotifierName}) {
         const notifiers: INotifier[] = [];
 
         if(identifiers === undefined) {
