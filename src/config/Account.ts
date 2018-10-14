@@ -11,10 +11,14 @@ function randomify(string: string, randomStringLength?: number) {
         .replace(/#randomString#/g, generateRandomString(randomStringLength));
 }
 
+let id = 0;
+
 export class Account {
     static createFrom(accountConfigData: AccountConfigData) {
         return new Account(randomify(accountConfigData.username, 12), randomify(accountConfigData.password, 12));
     }
+
+    public id: number = id++;
 
     constructor(public username: string, public password: string) {}
 }
