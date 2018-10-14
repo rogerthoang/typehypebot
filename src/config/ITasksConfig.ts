@@ -14,7 +14,7 @@ export type MonitoringConfigData = {
 };
 
 export type StoreOptionsConfigData = {
-    referenceName: string;
+    name: string;
     region: string;
 };
 
