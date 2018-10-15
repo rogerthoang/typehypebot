@@ -14,7 +14,7 @@ function randomify(string: string, randomStringLength?: number) {
 let id = 0;
 
 export class Account {
-    static createFrom(accountConfigData: AccountConfigData) {
+    static createFrom(accountConfigData: AccountConfigData): Account {
         return new Account(randomify(accountConfigData.username, 12), randomify(accountConfigData.password, 12));
     }
 

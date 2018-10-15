@@ -1,6 +1,6 @@
 import { appendFile, existsSync, mkdir, readFileSync as fsReadFileSync } from 'fs';
 
-export function writeFile(path: string, file: string, message: string) {
+export function writeFile(path: string, file: string, message: string): void {
     if(!existsSync(path)) {
         mkdir(path, () => {
             appendFile(`${path}/${file}`, `${message}\n`, { encoding: 'utf8' }, err => console.error(`Could not write to file ${file}`, err));

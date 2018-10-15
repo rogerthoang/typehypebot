@@ -34,13 +34,13 @@ export class Bot {
         });
     }
 
-    protected registerTask(storeReferenceName: string, task: TaskConstructor) {
+    protected registerTask(storeReferenceName: string, task: TaskConstructor): void {
         this.taskConstructorsByStoreReferenceName[storeReferenceName] = task;
     }
 
-    protected registerTasks() {}
+    protected registerTasks(): void {}
 
-    protected async init(doneInit: () => void) {
+    protected async init(doneInit: () => void): Promise<void> {
         try {
             console.log('Loading configs...');
             const {
@@ -96,7 +96,7 @@ export class Bot {
         }
     }
 
-    async notify(message: any, identifiers?: {type?: NotifierType, name?: NotifierName}) {
+    async notify(message: any, identifiers?: {type?: NotifierType, name?: NotifierName}): Promise<void> {
         const notifiers: INotifier[] = [];
 
         if(identifiers === undefined) {

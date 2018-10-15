@@ -28,7 +28,7 @@ export class StepManager {
         private steps: Steps,
     ) {}
 
-    startStep(options?: StartOptions) {
+    startStep(options?: StartOptions): void {
         this.halt = false;
 
         const stepType = this.getStepType([0, null]);
@@ -213,9 +213,9 @@ export class StepManager {
         return Array.isArray(step) ? StepType.Parallel : (typeof step === 'object' ? StepType.Choice : StepType.Single);
     }
 
-    setParallelSessionsCount(stepIndex: StepIndex, sessionsCount: number) {
+    setParallelSessionsCount(stepIndex: StepIndex, sessionsCount: number): void {
         this.parallelSessionsCount[stepIndex[0]] = sessionsCount;
     }
 
-    previousStep(currentStepIndex: StepIndex, previousStep?: StepConstructor) {}
+    previousStep(currentStepIndex: StepIndex, previousStep?: StepConstructor): void {}
 }

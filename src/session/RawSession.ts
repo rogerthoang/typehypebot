@@ -17,7 +17,7 @@ export class RawSession {
         }));
     }
 
-    resetCookies() {
+    resetCookies(): void {
         this.cookieJar = request.jar();
     }
 }

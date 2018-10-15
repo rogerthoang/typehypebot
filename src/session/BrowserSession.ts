@@ -11,11 +11,11 @@ export class BrowserSession {
 
     constructor(public context: BrowserContext, public page: Page) {}
 
-    async goto(url: string, options?: NavigationOptions) {
+    async goto(url: string, options?: NavigationOptions): Promise<void> {
         await this.page.goto(url, options);
     }
 
-    async close() {
+    async close(): Promise<void> {
         await this.context.close();
     }
 }

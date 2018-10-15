@@ -44,12 +44,12 @@ export class WebSocketClient extends EventListener {
         });
     }
 
-    stop() {
+    stop(): void {
         this.webSocket.close();
         this.callEvent(WebSocketEvent.Close);
     }
 
-    send(event: string|number, data: any, isAuthenticationMessage: boolean = false) {
+    send(event: string|number, data: any, isAuthenticationMessage = false): void {
         const send = (message: IWebSocketMessage) => {
             this.webSocket.send(JSON.stringify(message));
         };

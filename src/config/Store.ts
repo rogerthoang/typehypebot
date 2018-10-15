@@ -1,7 +1,7 @@
 import { DomainsByRegion, StoreConfigData } from './IStoresConfig';
 
 export class Store {
-    static createFrom(storeConfigData: StoreConfigData) {
+    static createFrom(storeConfigData: StoreConfigData): Store {
         return new Store(
             storeConfigData.name,
             storeConfigData.domainsByRegion,

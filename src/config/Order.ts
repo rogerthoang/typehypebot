@@ -7,7 +7,7 @@ import {
 } from './IOrdersConfig';
 
 export class Order {
-    static createFrom(orderConfigData: OrderConfigData) {
+    static createFrom(orderConfigData: OrderConfigData): Order {
         return new Order(
             orderConfigData.canBeUsedMultipleTimesAtSameStore,
             orderConfigData.maxUses,

@@ -1,6 +1,6 @@
 import { writeFile } from '@util/file';
 
-function forceDigits(number: number, numberOfDigits: number, after: boolean = true): string {
+function forceDigits(number: number, numberOfDigits: number, after = true): string {
     const string = number.toString();
     const currentNumberOfDigits = string.length;
     let newString = string;
@@ -8,7 +8,7 @@ function forceDigits(number: number, numberOfDigits: number, after: boolean = tr
         if(after) {
             newString += '0';
         }else {
-            newString = '0' + newString;
+            newString = `0${newString}`;
         }
     }
     return newString;
@@ -16,7 +16,7 @@ function forceDigits(number: number, numberOfDigits: number, after: boolean = tr
 
 const timePrefix = Date.now();
 
-export function log(message: string, file: string = 'main.txt') {
+export function log(message: string, file = 'main.txt'): void {
     const date = new Date();
     const realMessage = `[${forceDigits(date.getHours(), 2, false)}:${forceDigits(date.getMinutes(), 2, false)}:${forceDigits(date.getSeconds(), 2, false)}:${forceDigits(date.getMilliseconds(), 3, true)}] ${message}`;
 

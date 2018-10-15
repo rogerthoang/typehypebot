@@ -116,7 +116,7 @@ export abstract class BaseTask {
         });
     }
 
-    protected abstract init(done?: () => void);
+    protected abstract init(done?: () => void): void;
 
     protected abstract getSearchItemClassReference(): SearchItemConstructor;
 
@@ -150,7 +150,7 @@ export abstract class BaseTask {
         return steps;
     }
 
-    start() {
+    start(): void {
         if(!this.running) {
             this.startedTime = Date.now();
             this.running = true;
@@ -158,14 +158,14 @@ export abstract class BaseTask {
         }
     }
 
-    stop() {
+    stop(): void {
         if(this.running) {
             this.running = false;
             this.stepManager.halt = true;
         }
     }
 
-    log(string: string, file?: string) {
+    log(string: string, file?: string): void {
         let realFile = file;
 
         if(file === undefined) {

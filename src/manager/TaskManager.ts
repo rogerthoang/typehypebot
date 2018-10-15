@@ -11,7 +11,7 @@ export class TaskManager {
         }
     }
 
-    addTask(task: BaseTask) {
+    addTask(task: BaseTask): void {
         const storeName = task.store.name;
         const region = task.region;
         const accountId = task.account.id;
@@ -31,13 +31,13 @@ export class TaskManager {
         this.tasksByAccountId[accountId].push(task);
     }
 
-    startAll() {
+    startAll(): void {
         for(const task of this.tasks) {
             task.start();
         }
     }
 
-    stopAll() {
+    stopAll(): void {
         for(const task of this.tasks) {
             task.stop();
         }
