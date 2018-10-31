@@ -1,21 +1,19 @@
 import { BaseTask } from '../BaseTask';
 import { IRequestOptions, IResponse, makeRequest, RequestMethod } from '@util/request';
-import { StepConstructor, StepIndex, StepResult, StepType } from '../../manager/StepManager';
+import { StepIndex, StepResult } from '../../manager/StepManager';
 
 export interface IStepResults {
     [x: string]: any;
 }
 
-export abstract class Step {
-    protected stepType: StepType = StepType.Single;
-
+export abstract class Step<ResultType = StepResult> {
     constructor(
         protected task: BaseTask,
         private stepIndex: StepIndex,
-        protected results: StepResult,
+        protected results: ResultType,
     ) {}
 
-    protected log(string: string) {
+    protected log(string: string): void {
         this.task.log(string);
     }
 
@@ -34,13 +32,13 @@ export abstract class Step {
         }
     }
 
-    abstract run();
+    abstract run(): void;
 
-    nextStep(result: StepResult) {
+    nextStep(result: StepResult): void {
         this.task.stepManager.nextStep(this.stepIndex, result);
     }
 
-    previousStep() {}
+    previousStep(): void {}
 
-    reRun() {}
+    reRun(): void {}
 }
