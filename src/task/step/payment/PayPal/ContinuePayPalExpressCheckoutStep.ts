@@ -13,7 +13,7 @@ export class ContinuePayPalExpressCheckoutStep extends PayPalPaymentStep {
     }
 
     async run() {
-        const page = this.results.page;
+        const { page } = this.results;
 
         await page.waitForSelector('#confirmButtonTop');
         const content = await page.content();
