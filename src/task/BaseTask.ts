@@ -176,18 +176,6 @@ export abstract class BaseTask {
     }
 
     getCaptchaResponseToken(url: string, siteKey: string): Promise<string> { // todo: not really relevant here, move to step class
-        let alreadyResolved = false;
-        let finished = null;
-
-        for(const captchaSolverService of this.bot.captchaSolverServices) {
-            captchaSolverService.getResponseToken(url, siteKey).then((responseToken: string) => {
-                if(!alreadyResolved) {
-                    alreadyResolved = true;
-                    finished(responseToken);
-                }
-            });
-        }
-
-        return new Promise(resolve => finished = resolve);
+        return Promise.race(this.bot.captchaSolverServices.map(captchaSolverService => captchaSolverService.getResponseToken(url, siteKey)));
     }
 }
