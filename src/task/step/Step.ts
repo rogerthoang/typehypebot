@@ -2,11 +2,7 @@ import { BaseTask } from '../BaseTask';
 import { IRequestOptions, IResponse, makeRequest, RequestMethod } from '@util/request';
 import { StepIndex, StepResult } from '../../manager/StepManager';
 
-export interface IStepResults {
-    [x: string]: any;
-}
-
-export abstract class Step<ResultType = StepResult> {
+export abstract class Step<ResultType extends object = StepResult, CurrentResultsType extends object = StepResult> {
     constructor(
         protected task: BaseTask,
         private stepIndex: StepIndex,
