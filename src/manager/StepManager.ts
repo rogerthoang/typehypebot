@@ -37,13 +37,13 @@ export class StepManager {
         switch(stepType) {
             case StepType.Single:
                 step = <StepConstructor> this.steps[0];
-
-                for(let i = 0; i < options.parallelSessionsCount; i++) {
-                    new step(this.task, [0, null], {}).run();
-                }
+                new step(this.task, [0, null], {}).run();
                 return;
             case StepType.Parallel:
                 step = this.steps[0][0];
+                for(let i = 0; i < options.parallelSessionsCount; i++) {
+                    new step(this.task, [0, 0], {}).run();
+                }
                 break;
             case StepType.Choice:
                 step = this.steps[0][options.identifier][0];
@@ -64,6 +64,8 @@ export class StepManager {
 
         const isLastParallelStep = () => secondaryStepIndex === (<StepConstructor[]> this.steps[primaryStepIndex]).length - 1;
         const isLastChoiceStep = () => secondaryStepIndex === (<StepConstructor[]> this.steps[primaryStepIndex][options.identifier]).length - 1;
+
+        // checks for last step (if it is last step, stop the function from running here)
 
         if(primaryStepIndex === this.steps.length - 1) {
             switch(currentStepType) {
