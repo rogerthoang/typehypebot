@@ -2,7 +2,7 @@ import { IConfig } from './IConfig';
 
 export type SizesConfigData = {
     fallback: {
-        sizes: number[],
+        sizes: number[];
         any: boolean;
     };
     size: number;
