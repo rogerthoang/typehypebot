@@ -11,6 +11,9 @@ import { StartOptions, StepConstructor, StepManager } from '../manager/StepManag
 import { Account } from '../config/Account';
 import { StoreConfigData } from '../config/IStoresConfig';
 import { Order } from '../config/Order';
+import { Step } from './step/Step';
+import { CartRequestStep } from './step/CartRequestStep';
+import { LoginPayPalStep } from './step/payment/PayPal/LoginPayPalStep';
 
 let taskId = 0;
 
@@ -21,13 +24,6 @@ export type ParallelSteps = StepConstructor[];
 export type ChoiceSteps = { [choice: string]: StepConstructor[] };
 
 export type Steps = (SingleStep | ParallelSteps | ChoiceSteps)[];
-
-export type StepsByBreakpoint = { [breakpoint: string]: ParallelSteps | ChoiceSteps };
-
-export enum StepBreakpoint {
-    ProductsBreakpoint,
-    PaymentsBreakpoint,
-}
 
 export interface ITaskData {
     baseData: {
@@ -58,7 +54,7 @@ export abstract class BaseTask {
     public account: Account;
     public order: Order;
     public products: ProductConfigData[];
-    public searchItems: SearchItem[] = [];
+    public searchItemsByName: { [name: string]: SearchItem } = {};
 
     public stepManager: StepManager;
 
@@ -87,9 +83,11 @@ export abstract class BaseTask {
         this.startTime = baseData.startTime;
         this.products = baseData.products;
 
+        const searchItemClassReference = this.getSearchItemClassReference();
         for(const product of baseData.products) {
-            const searchItemClassReference = this.getSearchItemClassReference();
-            this.searchItems.push(new searchItemClassReference(product.early));
+            if(product.early) {
+                this.searchItemsByName[product.early.name] = new searchItemClassReference(product.early);
+            }
         }
 
         if(startInit) {
@@ -120,34 +118,16 @@ export abstract class BaseTask {
 
     protected abstract getSearchItemClassReference(): SearchItemConstructor;
 
-    protected abstract getStepsWithBreakpoints(): (SingleStep | StepBreakpoint)[];
-    protected abstract getProductSteps(): ParallelSteps;
+    protected abstract getSearchItemSteps(): ParallelSteps;
+    protected abstract getCartSteps(): ParallelSteps;
     protected abstract getPaymentSteps(): ChoiceSteps;
 
-    protected getStepsByBreakpoint(): StepsByBreakpoint {
-        const stepsByBreakpoint: { [breakpoint: string]: ParallelSteps | ChoiceSteps } = {};
-        stepsByBreakpoint[StepBreakpoint.ProductsBreakpoint] = this.getProductSteps();
-        stepsByBreakpoint[StepBreakpoint.PaymentsBreakpoint] = this.getPaymentSteps();
-        return stepsByBreakpoint;
-    }
-
-    private getSteps(): Steps {
-        const steps: Steps = [];
-
-        const stepsWithBreakpoints = this.getStepsWithBreakpoints();
-        const stepsByBreakpoint = this.getStepsByBreakpoint();
-        const breakpoints = Object.keys(stepsWithBreakpoints);
-
-        for(const step of stepsWithBreakpoints) {
-            const index = breakpoints.indexOf(String(<StepBreakpoint> step));
-            if(index > -1) { // breakpoint
-                steps.push(stepsByBreakpoint[String(<StepBreakpoint> step)]);
-            }else {
-                steps.push(<SingleStep> step);
-            }
-        }
-
-        return steps;
+    protected getSteps(): Steps {
+        return [
+            this.getSearchItemSteps(),
+            this.getCartSteps(),
+            this.getPaymentSteps(),
+        ];
     }
 
     start(): void {
