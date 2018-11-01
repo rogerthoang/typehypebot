@@ -30,7 +30,11 @@ export type ProductConfigData = {
         name: {
             contains: string[];
             blocked: string[];
-        },
+        };
+        url: {
+            contains: string[];
+            blocked: string[];
+        };
     };
     proxies: string[];
     sessionsPerProxy: number;
