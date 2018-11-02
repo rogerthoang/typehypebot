@@ -13,15 +13,16 @@ export type StepIndex = [number, number]; // primary step index, secondary step 
 export type StepConstructor<StepType extends Step = Step> = { new(task: BaseTask, stepIndex: StepIndex, results: StepResult): StepType };
 export type StepResult = AnyObject;
 
-export type StartOptions = { parallelSessionsCount?: number, identifier?: string };
+export type StartOptions = { parallelSessionsCount?: number, identifier?: string, startWithResult?: StepResult };
 
 export class StepManager {
     public halt = false;
 
+    private generalResults: { [stepIndex: number]: StepResult | StepResult[] } = {};
     private parallelSessionsCount: { [stepIndex: number]: number } = {};
-    private generalResults: { [stepIndex: number]: AnyObject } = {};
-    private parallelResults: { [stepIndex: number]: { [sessionId: number]: { [secondaryStepIndex: number]: AnyObject } } } = {};
-    private choiceResults: { [stepIndex: number]: { [secondaryStepIndex: number]: AnyObject } } = {};
+    private parallelResults: { [stepIndex: number]: { [sessionId: number]: { [secondaryStepIndex: number]: StepResult } } } = {};
+    private parallelNonMergeableResults: { [stepIndex: number]: StepResult } = {};
+    private choiceResults: { [stepIndex: number]: { [secondaryStepIndex: number]: StepResult } } = {};
 
     constructor(
         private task: BaseTask,
@@ -34,23 +35,28 @@ export class StepManager {
         const stepType = this.getStepType([0, null]);
         let step: StepConstructor = null;
 
+        const startWithResult = options.startWithResult === undefined ? {} : options.startWithResult;
+
         switch(stepType) {
             case StepType.Single:
                 step = <StepConstructor> this.steps[0];
-                new step(this.task, [0, null], {}).run();
+                new step(this.task, [0, null], startWithResult).run();
                 return;
             case StepType.Parallel:
                 step = this.steps[0][0];
                 for(let i = 0; i < options.parallelSessionsCount; i++) {
-                    new step(this.task, [0, 0], {}).run();
+                    if(options.startWithResult !== undefined) {
+                        new step(this.task, [0, 0], options.startWithResult[i]).run();
+                        continue;
+                    }
+                    new step(this.task, [0, 0], startWithResult).run();
                 }
-                break;
+                return;
             case StepType.Choice:
                 step = this.steps[0][options.identifier][0];
-                break;
+                new step(this.task, [0, 0], startWithResult).run();
+                return;
         }
-
-        new step(this.task, [0, 0], {}).run();
     }
 
     nextStep(currentStepIndex: StepIndex, result: StepResult, options?: { sessionId?: number, identifier?: string }): boolean {
@@ -142,6 +148,10 @@ export class StepManager {
                         }
                     }
 
+                    if(this.parallelNonMergeableResults[currentStepIndex[0]] !== undefined) {
+                        Object.assign(combinedResults, this.parallelNonMergeableResults[currentStepIndex[0]]);
+                    }
+
                     this.generalResults[primaryStepIndex] = combinedResults;
 
                     Object.assign(nextStepResult, combinedResults);
@@ -199,7 +209,15 @@ export class StepManager {
                 break;
             case StepType.Parallel:
                 nextStep = <StepConstructor> this.steps[nextStepIndex[0]][nextStepIndex[1]];
-                break;
+                if(Array.isArray(result)) {
+                    for(const resultItem of result) {
+                        new nextStep(this.task, nextStepIndex, Object.assign({}, nextStepResult, resultItem)).run();
+                    }
+                    this.parallelSessionsCount[nextStepIndex[0]] = result.length;
+                }else {
+                    throw new Error('Result has to be an array results because next step is parallel step');
+                }
+                return;
             case StepType.Choice:
                 nextStep = <StepConstructor> this.steps[nextStepIndex[0]][options.identifier][nextStepIndex[1]];
                 break;
@@ -215,8 +233,8 @@ export class StepManager {
         return Array.isArray(step) ? StepType.Parallel : (typeof step === 'object' ? StepType.Choice : StepType.Single);
     }
 
-    setParallelSessionsCount(stepIndex: StepIndex, sessionsCount: number): void {
-        this.parallelSessionsCount[stepIndex[0]] = sessionsCount;
+    setParallelSessionsNonMergeableResult(stepIndex: StepIndex, result: StepResult): void {
+        this.parallelNonMergeableResults[stepIndex[0]] = result;
     }
 
     previousStep(currentStepIndex: StepIndex, previousStep?: StepConstructor): void {}
