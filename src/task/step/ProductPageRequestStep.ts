@@ -1,6 +1,6 @@
-import { IGetSearchItemStepResults } from './GetSearchItemStep';
 import { RequestStep } from './RequestStep';
 import { IRequestOptions, IResponse, RequestMethod } from '@util/request';
+import { SearchItemBreakpointHandlerStepResult } from './SearchItemBreakpointHandlerStep';
 
 export interface ISizeItem {
     available: boolean;
@@ -8,21 +8,18 @@ export interface ISizeItem {
     sizeData?: any;
 }
 
-export interface IProductPageRequestStepResults extends IGetSearchItemStepResults {
+export type ProductPageRequestStepResult = {
     sizeItems: ISizeItem[];
-}
+};
 
-export interface IProductPageRequestResult {
-    sizeItems: ISizeItem[];
-    [x: string]: any;
-}
+export abstract class ProductPageRequestStep extends RequestStep<SearchItemBreakpointHandlerStepResult, ProductPageRequestStepResult> {
+    // error handling because this page might crash sometimes under heavy load
 
-export abstract class ProductPageRequestStep extends RequestStep {
-    async run() {
+    async run(): Promise<void> {
         try {
             const response = await this.getProductPageResponse();
-            const result = await this.onProductPageRequest(response);
-            this.nextStep(result);
+            const sizeItems = await this.onProductPageRequest(response);
+            this.nextStep({ sizeItems });
         }catch(error) {
             if(error.name === 'StatusCodeError') {
                 this.log(`Could not make product page request: status code ${error.statusCode}`);
@@ -50,5 +47,5 @@ export abstract class ProductPageRequestStep extends RequestStep {
         return await this.makeRequest(RequestMethod.GET, this.results.searchItem.url, this.getRequestOptions());
     }
 
-    protected abstract onProductPageRequest(response: IResponse): Promise<IProductPageRequestResult>;
+    protected abstract onProductPageRequest(response: IResponse): Promise<ISizeItem[]>;
 }
