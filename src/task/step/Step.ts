@@ -2,7 +2,7 @@ import { BaseTask } from '../BaseTask';
 import { IRequestOptions, IResponse, makeRequest, RequestMethod } from '@util/request';
 import { StepIndex, StepResult } from '../../manager/StepManager';
 
-export abstract class Step<ResultType extends object = StepResult, CurrentResultsType extends object = StepResult> {
+export abstract class Step<CurrentResultsType extends object = StepResult, ResultType = StepResult | StepResult[]> {
     constructor(
         protected task: BaseTask,
         private stepIndex: StepIndex,
@@ -35,7 +35,7 @@ export abstract class Step<ResultType extends object = StepResult, CurrentResult
 
     abstract run(): void;
 
-    nextStep(result: StepResult = {}): void {
+    nextStep(result: ResultType): void {
         this.task.stepManager.nextStep(this.stepIndex, result);
     }
 
