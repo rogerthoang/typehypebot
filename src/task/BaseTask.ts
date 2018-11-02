@@ -119,12 +119,14 @@ export abstract class BaseTask {
     protected abstract getSearchItemClassReference(): SearchItemConstructor;
 
     protected abstract getSearchItemSteps(): ParallelSteps;
+    protected abstract getProductSteps(): ParallelSteps;
     protected abstract getCartSteps(): ParallelSteps;
     protected abstract getPaymentSteps(): ChoiceSteps;
 
     protected getSteps(): Steps {
         return [
             this.getSearchItemSteps(),
+            this.getProductSteps(),
             this.getCartSteps(),
             this.getPaymentSteps(),
         ];

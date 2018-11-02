@@ -4,8 +4,10 @@ import { compensateInterval, ICompensateInterval } from '@util/timing';
 import { Step } from './Step';
 import { ProductConfigData } from '../../config/ITasksConfig';
 
-export abstract class GetSearchItemStep extends Step<{}, { product: ProductConfigData }> {
+export abstract class GetSearchItemStep extends Step<{ product: ProductConfigData }, {}> {
     protected interval: ICompensateInterval;
+
+    // no error handling because we expect the search page always to work and this step should be finished before the website struggles with load
 
     run(): void {
         this.interval = compensateInterval(async () => {
@@ -15,7 +17,7 @@ export abstract class GetSearchItemStep extends Step<{}, { product: ProductConfi
                 this.log(`Found search item with name ${searchItem.name} and URL ${searchItem.url}`);
                 this.task.searchItemsByName[searchItem.name] = searchItem;
                 this.interval.stop();
-                this.nextStep();
+                this.nextStep({});
                 return;
             }
             this.log('Could not find search item');
